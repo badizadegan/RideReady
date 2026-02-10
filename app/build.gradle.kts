@@ -82,4 +82,7 @@ dependencies {
 
     // Navigation
     implementation(libs.navigation.compose)
+
+    // Material Icons
+    implementation(libs.compose.material.icons)
 }
