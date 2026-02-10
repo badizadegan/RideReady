@@ -1,6 +1,9 @@
 package com.fahimeh.rideready.presentation.navigation
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -18,41 +21,49 @@ import com.fahimeh.rideready.presentation.settings.SettingsScreen
 fun RideReadyNavHost() {
     val navController = rememberNavController()
 
-    NavHost(
-        navController = navController,
-        startDestination = Routes.HOME
-    ) {
-
-        composable(Routes.HOME) {
-            HomeScreen(
-                onNavigateToDetail = {
-                    navController.navigate(Routes.DETAIL)
-                },
-                onNavigateToCities = {
-                    navController.navigate(Routes.CITIES)
-                },
-                onNavigateToSettings = {
-                    navController.navigate(Routes.SETTINGS)
-                }
-            )
+    Scaffold(
+        bottomBar = {
+            BottomBar(navController = navController)
         }
+    ) { innerPadding ->
 
-        composable(Routes.DETAIL) {
-            DetailScreen(
-                onBack = { navController.popBackStack() }
-            )
-        }
+        NavHost(
+            navController = navController,
+            startDestination = Routes.HOME,
+            modifier = Modifier.padding(innerPadding)
+        ) {
 
-        composable(Routes.CITIES) {
-            CityScreen(
-                onBack = { navController.popBackStack() }
-            )
-        }
+            composable(Routes.HOME) {
+                HomeScreen(
+                    onNavigateToDetail = {
+                        navController.navigate(Routes.DETAIL)
+                    },
+                    onNavigateToCities = {
+                        navController.navigate(Routes.CITIES)
+                    },
+                    onNavigateToSettings = {
+                        navController.navigate(Routes.SETTINGS)
+                    }
+                )
+            }
 
-        composable(Routes.SETTINGS) {
-            SettingsScreen(
-                onBack = { navController.popBackStack() }
-            )
+            composable(Routes.DETAIL) {
+                DetailScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(Routes.CITIES) {
+                CityScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(Routes.SETTINGS) {
+                SettingsScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
         }
     }
 }
