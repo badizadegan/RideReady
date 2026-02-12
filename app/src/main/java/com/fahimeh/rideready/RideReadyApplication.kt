@@ -1,6 +1,7 @@
 package com.fahimeh.rideready
 
 import android.app.Application
+import com.fahimeh.rideready.di.networkModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -14,6 +15,9 @@ class RideReadyApplication : Application() {
 
         startKoin {
             androidContext(this@RideReadyApplication)
+            modules(
+                networkModule
+            )
         }
     }
 }
