@@ -3,7 +3,9 @@ package com.fahimeh.rideready.presentation.navigation
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -38,8 +40,13 @@ fun BottomBar(
                         launchSingleTop = true
                     }
                 },
-                icon = { androidx.compose.material3.Icon(item.icon, contentDescription = item.label) },
-                label = { Text(text = item.label) }
+                icon = {
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = stringResource(id = item.labelResId)
+                    )
+                },
+                label = { Text(text = stringResource(id = item.labelResId)) }
             )
         }
     }

@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">RideReady</string>
+
+    <string name="home_title_best_day">Best day to ride</string>
+    <string name="home_score_label">Score: %1$d</string>
+
+    <string name="home_tab">Home</string>
+    <string name="cities_tab">Cities</string>
+    <string name="settings_tab">Settings</string>
+
+    <string name="home_placeholder">Home Screen</string>
+    <string name="detail_placeholder">Detail Screen</string>
+    <string name="cities_placeholder">Cities Screen</string>
+    <string name="settings_placeholder">Settings Screen</string>
 </resources>

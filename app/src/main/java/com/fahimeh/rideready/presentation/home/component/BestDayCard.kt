@@ -7,8 +7,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.fahimeh.rideready.R
 
 /**
  * Zeigt den empfohlenen Tag für eine Outdoor-Aktivität.
@@ -27,7 +29,7 @@ fun BestDayCard(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "Best day to ride",
+                text = stringResource(id = R.string.home_title_best_day),
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
@@ -35,7 +37,7 @@ fun BestDayCard(
                 style = MaterialTheme.typography.bodyLarge
             )
             Text(
-                text = "Score: $score",
+                text = stringResource(id = R.string.home_score_label, score),
                 style = MaterialTheme.typography.bodyMedium
             )
         }

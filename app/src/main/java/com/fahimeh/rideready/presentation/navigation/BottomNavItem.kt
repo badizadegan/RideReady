@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationCity
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.fahimeh.rideready.R
 
 /**
  * Modell für Bottom-Navigation-Einträge.
@@ -14,25 +15,25 @@ import androidx.compose.ui.graphics.vector.ImageVector
  */
 sealed class BottomNavItem(
     val route: String,
-    val label: String,
+    val labelResId: Int,
     val icon: ImageVector
 ) {
 
     object Home : BottomNavItem(
         route = Routes.HOME,
-        label = "Home",
+        labelResId = R.string.home_tab,
         icon = Icons.Filled.Home
     )
 
     object Cities : BottomNavItem(
         route = Routes.CITIES,
-        label = "Cities",
+        labelResId = R.string.cities_tab,
         icon = Icons.Filled.LocationCity
     )
 
     object Settings : BottomNavItem(
         route = Routes.SETTINGS,
-        label = "Settings",
+        labelResId = R.string.settings_tab,
         icon = Icons.Filled.Settings
     )
 }
