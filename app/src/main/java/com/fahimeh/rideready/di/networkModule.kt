@@ -26,7 +26,7 @@ val networkModule = module {
 
     single {
         Retrofit.Builder()
-            .baseUrl("https://api.example.com/")
+            .baseUrl("https://api.open-meteo.com/")
             .client(get())
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
