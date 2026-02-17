@@ -1,10 +1,19 @@
 package com.fahimeh.rideready.data.remote.dto
 
+import com.squareup.moshi.Json
+
 /**
- * Datenklasse für die rohe API-Antwort.
+ * DTOs für Open-Meteo Forecast API.
  *
- * Wird später in Domain-Modelle gemappt.
+ * Enthält Tages- und Stundenwerte.
  */
 data class ForecastResponseDto(
-    val timezone: String? = null
+    @Json(name = "timezone")
+    val timezone: String? = null,
+
+    @Json(name = "hourly")
+    val hourly: HourlyDto? = null,
+
+    @Json(name = "daily")
+    val daily: DailyDto? = null
 )
