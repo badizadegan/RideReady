@@ -1,12 +1,19 @@
 package com.fahimeh.rideready.di
 
+import com.fahimeh.rideready.data.repository.WeatherRepositoryImpl
+import com.fahimeh.rideready.domain.repository.WeatherRepository
 import org.koin.dsl.module
 
 /**
  * Koin-Modul für Repositories.
  *
- * Wird in Week 2 mit echten Implementierungen ergänzt.
+ * Bindet Repository-Interfaces an Implementierungen.
  */
 val repositoryModule = module {
-    // TODO: WeatherRepository binding folgt in Week 2
+
+    single<WeatherRepository> {
+        WeatherRepositoryImpl(
+            apiService = get()
+        )
+    }
 }
