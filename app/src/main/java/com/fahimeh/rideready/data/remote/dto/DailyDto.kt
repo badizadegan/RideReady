@@ -18,6 +18,6 @@ data class DailyDto(
     @Json(name = "precipitation_sum")
     val precipitationSum: List<Double> = emptyList(),
 
-    @Json(name = "windspeed_10m_max")
+    @Json(name = "wind_speed_10m_max")
     val windSpeedMax: List<Double> = emptyList()
 )

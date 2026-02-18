@@ -15,6 +15,6 @@ data class HourlyDto(
     @Json(name = "precipitation")
     val precipitation: List<Double> = emptyList(),
 
-    @Json(name = "windspeed_10m")
+    @Json(name = "wind_speed_10m")
     val windSpeed10m: List<Double> = emptyList()
 )
