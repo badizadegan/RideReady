@@ -5,11 +5,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import org.koin.androidx.compose.koinViewModel
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.fahimeh.rideready.presentation.city.CityScreen
 import com.fahimeh.rideready.presentation.detail.DetailScreen
 import com.fahimeh.rideready.presentation.home.HomeScreen
+import com.fahimeh.rideready.presentation.home.HomeViewModel
 import com.fahimeh.rideready.presentation.settings.SettingsScreen
 
 /**
@@ -34,7 +36,11 @@ fun RideReadyNavHost() {
         ) {
 
             composable(Routes.HOME) {
+
+                val vm: HomeViewModel = koinViewModel()
+
                 HomeScreen(
+                    viewModel = vm,
                     onNavigateToDetail = {
                         navController.navigate(Routes.DETAIL)
                     },

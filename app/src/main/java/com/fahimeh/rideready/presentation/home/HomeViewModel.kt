@@ -37,6 +37,10 @@ class HomeViewModel(
      */
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
+    init {
+        loadForecast()
+    }
+
     fun loadForecast() {
         viewModelScope.launch {
             _uiState.value = HomeUiState.Loading
