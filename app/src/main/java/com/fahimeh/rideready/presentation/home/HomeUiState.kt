@@ -1,5 +1,7 @@
 package com.fahimeh.rideready.presentation.home
 
+import com.fahimeh.rideready.domain.model.ForecastDay
+
 /**
  * UI-Zustände für den HomeScreen.
  *
@@ -17,7 +19,7 @@ sealed class HomeUiState {
      * Erfolgreiche Anzeige mit Daten
      */
     data class Success(
-        val items: List<String> = emptyList() // Platzhalter
+        val days: List<ForecastDay>
     ) : HomeUiState()
 
     /**
