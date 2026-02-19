@@ -1,12 +1,18 @@
 package com.fahimeh.rideready.di
 
+import com.fahimeh.rideready.presentation.home.HomeViewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 /**
  * Koin-Modul für ViewModels.
  *
- * ViewModels werden später hier registriert.
+ * ViewModels werden hier zentral registriert.
  */
 val viewModelModule = module {
-    // TODO: ViewModels folgen in Week 2
+    viewModel {
+        HomeViewModel(
+            getForecastUseCase = get()
+        )
+    }
 }
