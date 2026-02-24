@@ -51,7 +51,8 @@ fun HomeScreen(
                 uiState.bestDay?.let { best ->
                     BestDayCard(
                         dayLabel = best.date.toString(),
-                        score = uiState.bestScore?.score ?: 0
+                        score = uiState.bestScore?.score ?: 0,
+                        reason = uiState.bestScore?.reason ?: ""
                     )
                 }
 

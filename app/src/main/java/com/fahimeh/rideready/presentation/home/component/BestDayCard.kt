@@ -20,7 +20,8 @@ import com.fahimeh.rideready.R
 @Composable
 fun BestDayCard(
     dayLabel: String,
-    score: Int
+    score: Int,
+    reason: String
 ) {
     Card(
         modifier = Modifier.padding(16.dp)
@@ -40,6 +41,10 @@ fun BestDayCard(
                 text = stringResource(id = R.string.home_score_label, score),
                 style = MaterialTheme.typography.bodyMedium
             )
+            Text(
+                text = reason,
+                style = MaterialTheme.typography.bodySmall
+            )
         }
     }
 }
@@ -49,6 +54,7 @@ fun BestDayCard(
 fun BestDayCardPreview() {
     BestDayCard(
         dayLabel = "Saturday",
-        score = 82
+        score = 82,
+        reason = "Wind"
     )
 }
