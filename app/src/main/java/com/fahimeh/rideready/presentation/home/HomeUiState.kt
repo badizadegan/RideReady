@@ -1,6 +1,7 @@
 package com.fahimeh.rideready.presentation.home
 
 import com.fahimeh.rideready.domain.model.ForecastDay
+import com.fahimeh.rideready.domain.model.RideScoreResult
 
 /**
  * UI-Zustände für den HomeScreen.
@@ -10,27 +11,21 @@ import com.fahimeh.rideready.domain.model.ForecastDay
  */
 sealed class HomeUiState {
 
-    /**
-     * Daten werden geladen
-     */
+    //Daten werden geladen
     object Loading : HomeUiState()
 
-    /**
-     * Erfolgreiche Anzeige mit Daten
-     */
+    //Enfalgreiche Anzeige mit Daten
     data class Success(
-        val days: List<ForecastDay>
+        val days: List<ForecastDay>,
+        val bestDay: ForecastDay? = null,
+        val bestScore: RideScoreResult? = null
     ) : HomeUiState()
 
-    /**
-     * Fehlerzustand mit Anzeige für den User
-     */
+    //Echlerzustand mit Anzeige für den User
     data class Error(
         val message: String
     ) : HomeUiState()
 
-    /**
-     * Leerer Zustand (z. B. keine Daten vorhanden)
-     */
+    //Leerer Zustand
     object Empty : HomeUiState()
 }
