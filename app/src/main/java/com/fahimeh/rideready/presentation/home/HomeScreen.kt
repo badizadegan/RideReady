@@ -14,8 +14,7 @@ import com.fahimeh.rideready.presentation.home.component.ForecastDayCard
 /**
  * Startbildschirm der App.
  *
- * Aktuell mit Dummy-UI umgesetzt,
- * um die Struktur der Oberfläche zu zeigen.
+ * Rendert die Oberfläche basierend auf dem HomeUiState.
  */
 @Composable
 fun HomeScreen(
@@ -26,7 +25,7 @@ fun HomeScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    when (val s = state) {
+    when (val uiState = state) {
 
         HomeUiState.Loading -> {
             Text("Loading...")
@@ -38,7 +37,7 @@ fun HomeScreen(
 
         is HomeUiState.Error -> {
             Column {
-                Text("Error: ${s.message}")
+                Text("Error: ${uiState.message}")
                 Button(onClick = { viewModel.loadForecast() }) {
                     Text("Retry")
                 }
@@ -48,18 +47,16 @@ fun HomeScreen(
         is HomeUiState.Success -> {
             Column {
 
-                // Einfach erstes Element anzeigen (Best Day später)
-                val firstDay = s.days.firstOrNull()
-
-                firstDay?.let {
+                // Zeigt die berechnete Empfehlung an, falls vorhanden.
+                uiState.bestDay?.let { best ->
                     BestDayCard(
-                        dayLabel = it.date.toString(),
-                        score = 0 // Score kommt später
+                        dayLabel = best.date.toString(),
+                        score = uiState.bestScore?.score ?: 0
                     )
                 }
 
                 LazyColumn {
-                    items(s.days) { day ->
+                    items(uiState.days) { day ->
                         ForecastDayCard(
                             dayLabel = day.date.toString(),
                             temperature = "${day.maxTempC}°C"
