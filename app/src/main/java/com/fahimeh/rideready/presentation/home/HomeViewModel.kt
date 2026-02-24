@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fahimeh.rideready.core.error.AppError
 import com.fahimeh.rideready.core.result.AppResult
+import com.fahimeh.rideready.domain.usecase.FindBestDayUseCase
 import com.fahimeh.rideready.domain.usecase.GetForecastUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,28 +14,20 @@ import kotlinx.coroutines.launch
 /**
  * ViewModel für den HomeScreen.
  *
- * Aufgabe:
- *  * - Holt die Forecast-Daten über den UseCase
- *  * - Verwaltet den aktuellen UI-Zustand
- *  * - Wandelt technische Ergebnisse (AppResult) in darstellbare UiStates um
- *  *
- *  * Wichtig:
- *  * Die UI kennt keine Repository- oder API-Details.
+ * Lädt Forecast-Daten über UseCases
+ * und stellt sie als UiState für die UI bereit.
+ *
+ * Die UI kennt keine Repository- oder API-Details.
  */
 class HomeViewModel(
-    private val getForecastUseCase: GetForecastUseCase
+    private val getForecastUseCase: GetForecastUseCase,
+    private val findBestDayUseCase: FindBestDayUseCase
 ) : ViewModel() {
 
-    /**
-     * Interner, veränderbarer Zustand.
-     * Nur das ViewModel darf diesen ändern.
-     */
+    // Interner Zustand, wird nur im ViewModel geändert.
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
 
-    /**
-     * Öffentlicher, nur lesbarer Zustand für die UI.
-     * Der Screen beobachtet diesen State und rendert entsprechend.
-     */
+    // Öffentlicher, nur lesbarer Zustand für die UI.
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
@@ -52,7 +45,15 @@ class HomeViewModel(
             when (val result = getForecastUseCase(latitude, longitude)) {
                 is AppResult.Success -> {
                     val days = result.data
-                    _uiState.value = if (days.isEmpty()) HomeUiState.Empty else HomeUiState.Success(days)
+                    val best = findBestDayUseCase(days)
+
+                    _uiState.value =
+                        if (days.isEmpty()) HomeUiState.Empty
+                        else HomeUiState.Success(
+                            days = days,
+                            bestDay = best?.first,
+                            bestScore = best?.second
+                        )
                 }
                 is AppResult.Error -> {
                     _uiState.value = HomeUiState.Error(mapError(result.error))
