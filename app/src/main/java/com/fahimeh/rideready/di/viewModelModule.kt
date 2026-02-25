@@ -1,5 +1,6 @@
 package com.fahimeh.rideready.di
 
+import com.fahimeh.rideready.presentation.detail.DetailViewModel
 import com.fahimeh.rideready.presentation.home.HomeViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -17,4 +18,6 @@ val viewModelModule = module {
             memoryStore = get()
         )
     }
+
+    viewModel { DetailViewModel(memoryStore = get()) }
 }

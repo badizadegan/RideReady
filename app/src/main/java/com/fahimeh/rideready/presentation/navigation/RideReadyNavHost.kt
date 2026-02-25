@@ -59,9 +59,11 @@ fun RideReadyNavHost() {
 
             composable<DetailRoute> { backStackEntry ->
                 val route = backStackEntry.toRoute<DetailRoute>()
+                val vm: DetailViewModel = koinViewModel()
 
                 DetailScreen(
                     date = route.date,
+                    viewModel = vm,
                     onBack = { navController.popBackStack() }
                 )
             }
