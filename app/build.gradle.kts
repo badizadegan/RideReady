@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 
+    alias(libs.plugins.jetbrains.kotlin.serialization)
     // KSP statt KAPT für Annotation Processing (z. B. Room)
     alias(libs.plugins.ksp)
 }
@@ -82,6 +83,7 @@ dependencies {
 
     // Navigation
     implementation(libs.navigation.compose)
+    implementation(libs.kotlinx.serialization)
 
     // Material Icons
     implementation(libs.compose.material.icons)
