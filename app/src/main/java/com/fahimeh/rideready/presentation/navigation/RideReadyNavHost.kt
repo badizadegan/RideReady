@@ -8,8 +8,10 @@ import androidx.navigation.compose.NavHost
 import org.koin.androidx.compose.koinViewModel
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.fahimeh.rideready.presentation.city.CityScreen
 import com.fahimeh.rideready.presentation.detail.DetailScreen
+import com.fahimeh.rideready.presentation.detail.DetailViewModel
 import com.fahimeh.rideready.presentation.home.HomeScreen
 import com.fahimeh.rideready.presentation.home.HomeViewModel
 import com.fahimeh.rideready.presentation.settings.SettingsScreen
@@ -55,8 +57,11 @@ fun RideReadyNavHost() {
                 )
             }
 
-            composable<DetailRoute> {
+            composable<DetailRoute> { backStackEntry ->
+                val route = backStackEntry.toRoute<DetailRoute>()
+
                 DetailScreen(
+                    date = route.date,
                     onBack = { navController.popBackStack() }
                 )
             }

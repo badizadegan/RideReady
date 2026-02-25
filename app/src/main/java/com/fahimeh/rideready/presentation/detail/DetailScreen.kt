@@ -11,15 +11,17 @@ import androidx.compose.ui.tooling.preview.Preview
  */
 @Composable
 fun DetailScreen(
+    date: String,
     onBack: () -> Unit
 ) {
-    Text(text = "Detail Screen")
+    Text(text = "Detail for: $date")
 }
 
 @Composable
 @Preview(showBackground = true)
 fun DetailScreenPreview() {
     DetailScreen(
+        date = "",
         onBack = {}
     )
 }
