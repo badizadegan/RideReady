@@ -13,7 +13,8 @@ val viewModelModule = module {
     viewModel {
         HomeViewModel(
             getForecastUseCase = get(),
-            findBestDayUseCase = get()
+            findBestDayUseCase = get(),
+            memoryStore = get()
         )
     }
 }

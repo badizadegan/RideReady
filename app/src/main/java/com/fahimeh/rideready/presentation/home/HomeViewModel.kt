@@ -3,6 +3,7 @@ package com.fahimeh.rideready.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fahimeh.rideready.core.error.AppError
+import com.fahimeh.rideready.core.forecast.ForecastMemoryStore
 import com.fahimeh.rideready.core.result.AppResult
 import com.fahimeh.rideready.domain.usecase.FindBestDayUseCase
 import com.fahimeh.rideready.domain.usecase.GetForecastUseCase
@@ -21,7 +22,8 @@ import kotlinx.coroutines.launch
  */
 class HomeViewModel(
     private val getForecastUseCase: GetForecastUseCase,
-    private val findBestDayUseCase: FindBestDayUseCase
+    private val findBestDayUseCase: FindBestDayUseCase,
+    private val memoryStore: ForecastMemoryStore
 ) : ViewModel() {
 
     // Interner Zustand, wird nur im ViewModel geändert.
@@ -45,6 +47,10 @@ class HomeViewModel(
             when (val result = getForecastUseCase(latitude, longitude)) {
                 is AppResult.Success -> {
                     val days = result.data
+
+                    // Speichert die aktuell geladenen Forecast-Daten im Memory Store
+                    memoryStore.update(days)
+
                     val best = findBestDayUseCase(days)
 
                     _uiState.value =
