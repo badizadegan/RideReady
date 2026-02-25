@@ -8,8 +8,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 object HomeRoute
 
+// Route mit Argumenten = data class
 @Serializable
-object DetailRoute
+data class DetailRoute(
+    val date: String
+)
 
 @Serializable
 object CitiesRoute

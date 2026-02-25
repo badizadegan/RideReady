@@ -1,5 +1,6 @@
 package com.fahimeh.rideready.presentation.home.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -17,10 +18,13 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ForecastDayCard(
     dayLabel: String,
-    temperature: String
+    temperature: String,
+    onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable { onClick() }
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -36,6 +40,7 @@ fun ForecastDayCard(
 fun ForecastDayCardPreview() {
     ForecastDayCard(
         dayLabel = "Monday",
-        temperature = "17°C"
+        temperature = "17°C",
+        onClick = {}
     )
 }

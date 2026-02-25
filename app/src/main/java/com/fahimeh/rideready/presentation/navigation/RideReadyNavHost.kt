@@ -41,8 +41,10 @@ fun RideReadyNavHost() {
 
                 HomeScreen(
                     viewModel = vm,
-                    onNavigateToDetail = {
-                        navController.navigate(DetailRoute)
+                    onNavigateToDetail = { date ->
+                        navController.navigate(
+                            DetailRoute(date = date)
+                        )
                     },
                     onNavigateToCities = {
                         navController.navigate(CitiesRoute)

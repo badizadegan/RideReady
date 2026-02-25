@@ -19,7 +19,7 @@ import com.fahimeh.rideready.presentation.home.component.ForecastDayCard
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
-    onNavigateToDetail: () -> Unit,
+    onNavigateToDetail: (String) -> Unit, //date
     onNavigateToCities: () -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
@@ -60,7 +60,10 @@ fun HomeScreen(
                     items(uiState.days) { day ->
                         ForecastDayCard(
                             dayLabel = day.date.toString(),
-                            temperature = "${day.maxTempC}°C"
+                            temperature = "${day.maxTempC}°C",
+                            onClick = {
+                                onNavigateToDetail(day.date.toString())
+                            }
                         )
                     }
                 }
