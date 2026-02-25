@@ -14,25 +14,25 @@ import com.fahimeh.rideready.R
  * und Navigation eines Tabs benötigt werden.
  */
 sealed class BottomNavItem(
-    val route: String,
+    val route: Any,
     val labelResId: Int,
     val icon: ImageVector
 ) {
 
     object Home : BottomNavItem(
-        route = Routes.HOME,
+        route = HomeRoute,
         labelResId = R.string.home_tab,
         icon = Icons.Filled.Home
     )
 
     object Cities : BottomNavItem(
-        route = Routes.CITIES,
+        route = CitiesRoute,
         labelResId = R.string.cities_tab,
         icon = Icons.Filled.LocationCity
     )
 
     object Settings : BottomNavItem(
-        route = Routes.SETTINGS,
+        route = SettingsRoute,
         labelResId = R.string.settings_tab,
         icon = Icons.Filled.Settings
     )
