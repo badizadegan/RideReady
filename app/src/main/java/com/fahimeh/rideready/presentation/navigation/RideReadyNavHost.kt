@@ -31,41 +31,41 @@ fun RideReadyNavHost() {
 
         NavHost(
             navController = navController,
-            startDestination = Routes.HOME,
+            startDestination = HomeRoute,
             modifier = Modifier.padding(innerPadding)
         ) {
 
-            composable(Routes.HOME) {
+            composable<HomeRoute> {
 
                 val vm: HomeViewModel = koinViewModel()
 
                 HomeScreen(
                     viewModel = vm,
                     onNavigateToDetail = {
-                        navController.navigate(Routes.DETAIL)
+                        navController.navigate(DetailRoute)
                     },
                     onNavigateToCities = {
-                        navController.navigate(Routes.CITIES)
+                        navController.navigate(CitiesRoute)
                     },
                     onNavigateToSettings = {
-                        navController.navigate(Routes.SETTINGS)
+                        navController.navigate(SettingsRoute)
                     }
                 )
             }
 
-            composable(Routes.DETAIL) {
+            composable<DetailRoute> {
                 DetailScreen(
                     onBack = { navController.popBackStack() }
                 )
             }
 
-            composable(Routes.CITIES) {
+            composable<CitiesRoute> {
                 CityScreen(
                     onBack = { navController.popBackStack() }
                 )
             }
 
-            composable(Routes.SETTINGS) {
+            composable<SettingsRoute> {
                 SettingsScreen(
                     onBack = { navController.popBackStack() }
                 )
