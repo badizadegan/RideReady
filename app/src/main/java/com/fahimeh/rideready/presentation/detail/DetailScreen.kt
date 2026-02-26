@@ -1,6 +1,8 @@
 package com.fahimeh.rideready.presentation.detail
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,6 +25,8 @@ fun DetailScreen(
 ) {
     val day = viewModel.getDay(date)
 
+    val bestWindow = viewModel.getBestWindow(date)
+
     if (day == null) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = "No data for selected day")
@@ -35,6 +39,22 @@ fun DetailScreen(
         Text(text = "Detail for: ${day.date}")
         Text(text = "Min: ${day.minTempC}°C  Max: ${day.maxTempC}°C")
         Text(text = "Rain: ${day.precipitationMm}mm  Wind: ${day.windSpeedKmh}km/h")
+
+        // Anzeige des besten Zeitfensters für diesen Tag
+        bestWindow?.let { (window, score) ->
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Zeitspanne mit Start- und Endzeit
+            Text(
+                text = "Best time: ${window.start.toLocalTime()} - ${window.end.toLocalTime()}"
+            )
+
+            // Score und kurze Begründung der Empfehlung
+            Text(
+                text = "Score: ${score.score} (${score.reason})"
+            )
+        }
 
         LazyColumn {
             items(day.hourly) { h ->

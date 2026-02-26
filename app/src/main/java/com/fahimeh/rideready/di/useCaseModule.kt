@@ -2,6 +2,7 @@ package com.fahimeh.rideready.di
 
 import com.fahimeh.rideready.domain.usecase.CalculateRideScoreUseCase
 import com.fahimeh.rideready.domain.usecase.FindBestDayUseCase
+import com.fahimeh.rideready.domain.usecase.FindBestTimeWindowUseCase
 import com.fahimeh.rideready.domain.usecase.GetForecastUseCase
 import org.koin.dsl.module
 
@@ -21,4 +22,6 @@ val useCaseModule = module {
             calculateRideScoreUseCase = get()
         )
     }
+
+    single { FindBestTimeWindowUseCase() }
 }

@@ -19,5 +19,10 @@ val viewModelModule = module {
         )
     }
 
-    viewModel { DetailViewModel(memoryStore = get()) }
+    viewModel {
+        DetailViewModel(
+            memoryStore = get(),
+            findBestTimeWindowUseCase = get()
+        )
+    }
 }
