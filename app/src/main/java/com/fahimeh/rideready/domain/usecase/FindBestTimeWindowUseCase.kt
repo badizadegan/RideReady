@@ -15,10 +15,14 @@ class FindBestTimeWindowUseCase {
 
     operator fun invoke(
         day: ForecastDay,
-        windowHours: Int = 2
+        windowHours: Int = 2,
+        startHour: Int = 6,
+        endHourExclusive: Int = 22
     ): Pair<TimeWindow, RideScoreResult>? {
 
         val hours = day.hourly
+            .filter { it.time.hour in startHour until endHourExclusive }
+
         if (hours.size < windowHours) return null
 
         var best: Pair<TimeWindow, RideScoreResult>? = null
