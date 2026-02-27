@@ -1,6 +1,7 @@
 package com.fahimeh.rideready.presentation.home
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -8,6 +9,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.unit.dp
+import com.fahimeh.rideready.core.extension.toDateLabel
+import com.fahimeh.rideready.core.extension.toDayLabel
 import com.fahimeh.rideready.presentation.home.component.BestDayCard
 import com.fahimeh.rideready.presentation.home.component.ForecastDayCard
 
@@ -50,16 +54,18 @@ fun HomeScreen(
                 // Zeigt die berechnete Empfehlung an, falls vorhanden.
                 uiState.bestDay?.let { best ->
                     BestDayCard(
-                        dayLabel = best.date.toString(),
+                        dayLabel = "${best.date.toDayLabel()} • ${best.date.toDateLabel()}",
                         score = uiState.bestScore?.score ?: 0,
                         reason = uiState.bestScore?.reason ?: ""
                     )
                 }
 
-                LazyColumn {
+                LazyColumn(
+                    contentPadding = PaddingValues(vertical = 8.dp)
+                ) {
                     items(uiState.days) { day ->
                         ForecastDayCard(
-                            dayLabel = day.date.toString(),
+                            dayLabel = "${day.date.toDayLabel()} • ${day.date.toDateLabel()}",
                             temperature = "${day.maxTempC}°C",
                             onClick = {
                                 onNavigateToDetail(day.date.toString())
