@@ -79,8 +79,7 @@ fun RideReadyNavHost() {
 
                 DetailScreen(
                     date = route.date,
-                    viewModel = vm,
-                    onBack = { navController.popBackStack() }
+                    viewModel = vm
                 )
             }
 
