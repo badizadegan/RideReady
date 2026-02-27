@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.fahimeh.rideready.presentation.city.CityScreen
+import com.fahimeh.rideready.presentation.city.CityViewModel
 import com.fahimeh.rideready.presentation.detail.DetailScreen
 import com.fahimeh.rideready.presentation.detail.DetailViewModel
 import com.fahimeh.rideready.presentation.home.HomeScreen
@@ -69,7 +70,10 @@ fun RideReadyNavHost() {
             }
 
             composable<CitiesRoute> {
+                val vm: CityViewModel = koinViewModel()
+
                 CityScreen(
+                    viewModel = vm,
                     onBack = { navController.popBackStack() }
                 )
             }

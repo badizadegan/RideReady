@@ -22,9 +22,13 @@ class CityViewModel(
     private val deleteCityUseCase: DeleteCityUseCase
 ) : ViewModel() {
 
+    // UI-Zustand wird hier zentral gehalten
     private val _uiState = MutableStateFlow(CityUiState())
     val uiState: StateFlow<CityUiState> = _uiState.asStateFlow()
 
+    /**
+     * Startet das Sammeln des Flow aus der Datenbank.
+     */
     init {
         viewModelScope.launch {
             getSavedCitiesUseCase().collect { list ->
@@ -33,6 +37,10 @@ class CityViewModel(
         }
     }
 
+    /**
+     * Fügt testweise eine Beispielstadt hinzu.
+     * Wird später durch echte Suche ersetzt.
+     */
     fun addDummyCity() {
         viewModelScope.launch {
             saveCityUseCase(
@@ -45,6 +53,9 @@ class CityViewModel(
         }
     }
 
+    /**
+     * Löscht eine Stadt.
+     */
     fun deleteCity(city: CityEntity) {
         viewModelScope.launch {
             deleteCityUseCase(city)
