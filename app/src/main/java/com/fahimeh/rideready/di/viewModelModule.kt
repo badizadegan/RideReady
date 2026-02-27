@@ -1,5 +1,6 @@
 package com.fahimeh.rideready.di
 
+import com.fahimeh.rideready.presentation.city.CityViewModel
 import com.fahimeh.rideready.presentation.detail.DetailViewModel
 import com.fahimeh.rideready.presentation.home.HomeViewModel
 import org.koin.core.module.dsl.viewModel
@@ -24,5 +25,9 @@ val viewModelModule = module {
             memoryStore = get(),
             findBestTimeWindowUseCase = get()
         )
+    }
+
+    viewModel {
+        CityViewModel(get(), get(), get())
     }
 }
