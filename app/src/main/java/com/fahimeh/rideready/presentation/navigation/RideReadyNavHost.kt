@@ -7,6 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import org.koin.androidx.compose.koinViewModel
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.fahimeh.rideready.presentation.city.CityScreen
@@ -26,9 +28,22 @@ import com.fahimeh.rideready.presentation.settings.SettingsScreen
 fun RideReadyNavHost() {
     val navController = rememberNavController()
 
+    val navBackStackEntry = navController.currentBackStackEntryAsState()
+    val destination = navBackStackEntry.value?.destination
+
+    val showBottomBar =
+        destination?.hasRoute(HomeRoute::class) == true ||
+                destination?.hasRoute(CitiesRoute::class) == true ||
+                destination?.hasRoute(SettingsRoute::class) == true
+
     Scaffold(
+        topBar = {
+            RideReadyTopBar(navController = navController)
+        },
         bottomBar = {
-            BottomBar(navController = navController)
+            if (showBottomBar) {
+                BottomBar(navController = navController)
+            }
         }
     ) { innerPadding ->
 
@@ -73,15 +88,12 @@ fun RideReadyNavHost() {
                 val vm: CityViewModel = koinViewModel()
 
                 CityScreen(
-                    viewModel = vm,
-                    onBack = { navController.popBackStack() }
+                    viewModel = vm
                 )
             }
 
             composable<SettingsRoute> {
-                SettingsScreen(
-                    onBack = { navController.popBackStack() }
-                )
+                SettingsScreen()
             }
         }
     }

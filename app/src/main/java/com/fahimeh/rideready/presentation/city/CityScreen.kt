@@ -18,8 +18,7 @@ import com.fahimeh.rideready.presentation.city.component.CityRow
  */
 @Composable
 fun CityScreen(
-    viewModel: CityViewModel,
-    onBack: () -> Unit
+    viewModel: CityViewModel
 ) {
     val state by viewModel.uiState.collectAsState()
 

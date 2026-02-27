@@ -10,16 +10,12 @@ import androidx.compose.ui.tooling.preview.Preview
  * Platzhalter für spätere Konfigurationen.
  */
 @Composable
-fun SettingsScreen(
-    onBack: () -> Unit
-) {
+fun SettingsScreen() {
     Text(text = "Settings Screen")
 }
 
 @Composable
 @Preview(showBackground = true)
 fun SettingsScreenPreview() {
-    SettingsScreen(
-        onBack = {}
-    )
+    SettingsScreen()
 }
