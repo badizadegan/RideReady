@@ -16,7 +16,8 @@ val repositoryModule = module {
 
     single<WeatherRepository> {
         WeatherRepositoryImpl(
-            apiService = get()
+            apiService = get(),
+            cache = get()
         )
     }
 
