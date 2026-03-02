@@ -1,23 +1,22 @@
 package com.fahimeh.rideready.domain.repository
 
-import com.fahimeh.rideready.data.local.entity.CityEntity
+import com.fahimeh.rideready.domain.model.City
 import kotlinx.coroutines.flow.Flow
 
 /**
  * Repository-Interface für gespeicherte Städte.
  *
- * Die Domain kennt nur dieses Interface,
- * nicht die konkrete Room-Implementierung.
+ * Die Domain kennt nur das City-Modell,
+ * nicht die Room-Entity.
  */
 interface CityRepository {
 
     /**
-     * Gibt alle gespeicherten Städte als Flow zurück.
-     * Flow wird verwendet, damit UI automatisch reagiert.
+     * Beobachtet alle gespeicherten Städte.
      */
-    fun observeCities(): Flow<List<CityEntity>>
+    fun observeCities(): Flow<List<City>>
 
-    suspend fun saveCity(city: CityEntity)
+    suspend fun saveCity(city: City)
 
-    suspend fun deleteCity(city: CityEntity)
+    suspend fun deleteCity(city: City)
 }

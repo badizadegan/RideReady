@@ -2,7 +2,7 @@ package com.fahimeh.rideready.presentation.city
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fahimeh.rideready.data.local.entity.CityEntity
+import com.fahimeh.rideready.domain.model.City
 import com.fahimeh.rideready.domain.usecase.DeleteCityUseCase
 import com.fahimeh.rideready.domain.usecase.GetSavedCitiesUseCase
 import com.fahimeh.rideready.domain.usecase.SaveCityUseCase
@@ -14,7 +14,11 @@ import kotlinx.coroutines.launch
 /**
  * ViewModel für CitiesScreen.
  *
- * Beobachtet gespeicherte Städte und bietet Aktionen zum Speichern/Löschen.
+ * Beobachtet gespeicherte Städte
+ * und bietet Aktionen zum Speichern/Löschen.
+ *
+ * Arbeitet nur mit dem Domain-Modell City
+ * und kennt keine Room-Entity mehr.
  */
 class CityViewModel(
     private val getSavedCitiesUseCase: GetSavedCitiesUseCase,
@@ -44,7 +48,7 @@ class CityViewModel(
     fun addDummyCity() {
         viewModelScope.launch {
             saveCityUseCase(
-                CityEntity(
+                City(
                     name = "Leipzig",
                     latitude = 51.3397,
                     longitude = 12.3731
@@ -56,7 +60,7 @@ class CityViewModel(
     /**
      * Löscht eine Stadt.
      */
-    fun deleteCity(city: CityEntity) {
+    fun deleteCity(city: City) {
         viewModelScope.launch {
             deleteCityUseCase(city)
         }
