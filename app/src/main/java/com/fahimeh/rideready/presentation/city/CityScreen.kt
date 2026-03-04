@@ -34,7 +34,8 @@ fun CityScreen(
             items(state.cities) { city ->
                 CityRow(
                     city = city,
-                    onDelete = { viewModel.deleteCity(city) }
+                    onDelete = { viewModel.deleteCity(city) },
+                    onSelect = { viewModel.selectCity(city.id) }
                 )
             }
         }

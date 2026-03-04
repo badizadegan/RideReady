@@ -32,4 +32,12 @@ class CityRepositoryImpl(
     override suspend fun deleteCity(city: City) {
         dao.deleteCity(city.toEntity())
     }
+
+    override suspend fun selectCity(cityId: Long) {
+        dao.selectCity(cityId)
+    }
+
+    override suspend fun getSelectedCity(): City? {
+        return dao.getSelectedCity()?.toDomain()
+    }
 }

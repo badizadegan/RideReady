@@ -7,6 +7,7 @@ import com.fahimeh.rideready.core.forecast.ForecastMemoryStore
 import com.fahimeh.rideready.core.result.AppResult
 import com.fahimeh.rideready.domain.usecase.FindBestDayUseCase
 import com.fahimeh.rideready.domain.usecase.GetForecastUseCase
+import com.fahimeh.rideready.domain.usecase.GetSelectedCityUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +24,8 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val getForecastUseCase: GetForecastUseCase,
     private val findBestDayUseCase: FindBestDayUseCase,
-    private val memoryStore: ForecastMemoryStore
+    private val memoryStore: ForecastMemoryStore,
+    private val getSelectedCityUseCase: GetSelectedCityUseCase
 ) : ViewModel() {
 
     // Interner Zustand, wird nur im ViewModel geändert.
@@ -40,9 +42,11 @@ class HomeViewModel(
         viewModelScope.launch {
             _uiState.value = HomeUiState.Loading
 
-            // TODO: Später aus gespeicherten Städten / Settings holen.
-            val latitude = 51.3397
-            val longitude = 12.3731
+            val city = getSelectedCityUseCase()
+
+            // fallback
+            val latitude = city?.latitude ?: 51.3397
+            val longitude = city?.longitude ?: 12.3731
 
             when (val result = getForecastUseCase(latitude, longitude)) {
                 is AppResult.Success -> {

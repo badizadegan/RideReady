@@ -11,8 +11,11 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "cities")
 data class CityEntity(
 
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     val name: String,
     val latitude: Double,
-    val longitude: Double
+    val longitude: Double,
+
+    // Markiert die aktuell ausgewählte Stadt
+    val isSelected: Boolean = false
 )

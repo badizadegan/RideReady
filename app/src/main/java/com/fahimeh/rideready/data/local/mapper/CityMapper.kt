@@ -10,16 +10,20 @@ import com.fahimeh.rideready.domain.model.City
  */
 fun CityEntity.toDomain(): City {
     return City(
+        id = id ,
         name = name,
         latitude = latitude,
-        longitude = longitude
+        longitude = longitude,
+        isSelected = isSelected
     )
 }
 
 fun City.toEntity(): CityEntity {
     return CityEntity(
+        id = id ,
         name = name,
         latitude = latitude,
-        longitude = longitude
+        longitude = longitude,
+        isSelected = isSelected
     )
 }

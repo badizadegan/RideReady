@@ -16,7 +16,8 @@ val viewModelModule = module {
         HomeViewModel(
             getForecastUseCase = get(),
             findBestDayUseCase = get(),
-            memoryStore = get()
+            memoryStore = get(),
+            getSelectedCityUseCase = get()
         )
     }
 
@@ -28,6 +29,6 @@ val viewModelModule = module {
     }
 
     viewModel {
-        CityViewModel(get(), get(), get())
+        CityViewModel(get(), get(), get(), get())
     }
 }

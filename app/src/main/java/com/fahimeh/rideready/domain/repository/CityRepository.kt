@@ -19,4 +19,7 @@ interface CityRepository {
     suspend fun saveCity(city: City)
 
     suspend fun deleteCity(city: City)
+
+    suspend fun selectCity(cityId: Long)
+    suspend fun getSelectedCity(): City?
 }
