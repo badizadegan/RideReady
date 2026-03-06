@@ -7,6 +7,7 @@ import com.fahimeh.rideready.domain.usecase.FindBestTimeWindowUseCase
 import com.fahimeh.rideready.domain.usecase.GetForecastUseCase
 import com.fahimeh.rideready.domain.usecase.GetSavedCitiesUseCase
 import com.fahimeh.rideready.domain.usecase.GetSelectedCityUseCase
+import com.fahimeh.rideready.domain.usecase.ObserveSelectedCityUseCase
 import com.fahimeh.rideready.domain.usecase.SaveCityUseCase
 import com.fahimeh.rideready.domain.usecase.SelectCityUseCase
 import org.koin.dsl.module
@@ -30,4 +31,6 @@ val useCaseModule = module {
 
     single { SelectCityUseCase(get()) }
     single { GetSelectedCityUseCase(get()) }
+
+    single { ObserveSelectedCityUseCase(get()) }
 }
