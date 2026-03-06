@@ -24,6 +24,12 @@ class CityRepositoryImpl(
         }
     }
 
+    override fun observeSelectedCity(): Flow<City?> {
+        return dao.observeSelectedCity().map { entity ->
+            entity?.toDomain()
+        }
+    }
+
     override suspend fun saveCity(city: City) {
         // Domain → Entity umwandeln
         dao.insertCity(city.toEntity())

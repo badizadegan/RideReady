@@ -24,6 +24,9 @@ interface CityDao {
     @Query("SELECT * FROM cities WHERE isSelected = 1 LIMIT 1")
     suspend fun getSelectedCity(): CityEntity?
 
+    @Query("SELECT * FROM cities WHERE isSelected = 1 LIMIT 1")
+    fun observeSelectedCity(): kotlinx.coroutines.flow.Flow<CityEntity?>
+
     // Setzt alle Städte auf nicht ausgewählt
     @Query("UPDATE cities SET isSelected = 0")
     suspend fun clearSelection()

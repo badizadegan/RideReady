@@ -16,6 +16,8 @@ interface CityRepository {
      */
     fun observeCities(): Flow<List<City>>
 
+    fun observeSelectedCity(): Flow<City?>
+
     suspend fun saveCity(city: City)
 
     suspend fun deleteCity(city: City)
