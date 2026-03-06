@@ -31,8 +31,14 @@ class CityRepositoryImpl(
     }
 
     override suspend fun saveCity(city: City) {
-        // Domain → Entity umwandeln
-        dao.insertCity(city.toEntity())
+
+        // Prüft ob die Stadt bereits gespeichert ist,
+        // um doppelte Einträge zu vermeiden.
+        val existing = dao.getCityByName(city.name)
+
+        if (existing == null) {
+            dao.insertCity(city.toEntity())
+        }
     }
 
     override suspend fun deleteCity(city: City) {

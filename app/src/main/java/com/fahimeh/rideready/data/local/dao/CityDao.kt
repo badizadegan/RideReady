@@ -24,8 +24,14 @@ interface CityDao {
     @Query("SELECT * FROM cities WHERE isSelected = 1 LIMIT 1")
     suspend fun getSelectedCity(): CityEntity?
 
+    // Wird im HomeScreen verwendet,
+    // um bei Änderungen automatisch einen neuen Forecast zu laden.
     @Query("SELECT * FROM cities WHERE isSelected = 1 LIMIT 1")
     fun observeSelectedCity(): kotlinx.coroutines.flow.Flow<CityEntity?>
+
+    // Wird verwendet, um doppelte Einträge zu vermeiden.
+    @Query("SELECT * FROM cities WHERE name = :name LIMIT 1")
+    suspend fun getCityByName(name: String): CityEntity?
 
     // Setzt alle Städte auf nicht ausgewählt
     @Query("UPDATE cities SET isSelected = 0")
