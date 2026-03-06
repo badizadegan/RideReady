@@ -7,10 +7,12 @@ import com.fahimeh.rideready.core.forecast.ForecastMemoryStore
 import com.fahimeh.rideready.core.result.AppResult
 import com.fahimeh.rideready.domain.usecase.FindBestDayUseCase
 import com.fahimeh.rideready.domain.usecase.GetForecastUseCase
-import com.fahimeh.rideready.domain.usecase.GetSelectedCityUseCase
+import com.fahimeh.rideready.domain.usecase.ObserveSelectedCityUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 /**
@@ -25,7 +27,7 @@ class HomeViewModel(
     private val getForecastUseCase: GetForecastUseCase,
     private val findBestDayUseCase: FindBestDayUseCase,
     private val memoryStore: ForecastMemoryStore,
-    private val getSelectedCityUseCase: GetSelectedCityUseCase
+    private val observeSelectedCityUseCase: ObserveSelectedCityUseCase
 ) : ViewModel() {
 
     // Interner Zustand, wird nur im ViewModel geändert.
@@ -35,18 +37,45 @@ class HomeViewModel(
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
-        loadForecast()
+        // Beobachtet die ausgewählte Stadt aus der Datenbank.
+        // Wenn der Nutzer eine andere Stadt auswählt,
+        // wird automatisch ein neuer Forecast geladen.
+        observeSelectedCity()
     }
 
-    fun loadForecast() {
+    private fun observeSelectedCity() {
         viewModelScope.launch {
-            _uiState.value = HomeUiState.Loading
 
-            val city = getSelectedCityUseCase()
+            observeSelectedCityUseCase()
+                .distinctUntilChanged()
+                .collect { city ->
 
-            // fallback
-            val latitude = city?.latitude ?: 51.3397
-            val longitude = city?.longitude ?: 12.3731
+                // fallback falls noch keine Stadt ausgewählt ist
+                val latitude = city?.latitude ?: 51.3397
+                val longitude = city?.longitude ?: 12.3731
+
+                loadForecast(latitude, longitude)
+            }
+        }
+    }
+
+    /**
+     * Lädt den Wetter-Forecast erneut.
+     * Wird vom Retry-Button im UI aufgerufen.
+     */
+    fun refresh() {
+        viewModelScope.launch {
+            observeSelectedCityUseCase().firstOrNull()?.let { city ->
+                val lat = city.latitude
+                val lon = city.longitude
+                loadForecast(lat, lon)
+            }
+        }
+    }
+
+    private suspend fun loadForecast(latitude: Double, longitude: Double) {
+
+        _uiState.value = HomeUiState.Loading
 
             when (val result = getForecastUseCase(latitude, longitude)) {
                 is AppResult.Success -> {
@@ -72,7 +101,6 @@ class HomeViewModel(
                     _uiState.value = HomeUiState.Loading
                 }
             }
-        }
     }
 
     /**

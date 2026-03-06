@@ -17,7 +17,7 @@ val viewModelModule = module {
             getForecastUseCase = get(),
             findBestDayUseCase = get(),
             memoryStore = get(),
-            getSelectedCityUseCase = get()
+            observeSelectedCityUseCase = get()
         )
     }
 

@@ -42,7 +42,7 @@ fun HomeScreen(
         is HomeUiState.Error -> {
             Column {
                 Text("Error: ${uiState.message}")
-                Button(onClick = { viewModel.loadForecast() }) {
+                Button(onClick = { viewModel.refresh() }) {
                     Text("Retry")
                 }
             }
