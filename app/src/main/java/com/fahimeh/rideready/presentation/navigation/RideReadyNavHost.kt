@@ -18,6 +18,7 @@ import com.fahimeh.rideready.presentation.detail.DetailViewModel
 import com.fahimeh.rideready.presentation.home.HomeScreen
 import com.fahimeh.rideready.presentation.home.HomeViewModel
 import com.fahimeh.rideready.presentation.settings.SettingsScreen
+import com.fahimeh.rideready.presentation.settings.SettingsViewModel
 
 /**
  * Zentrale Navigations-Komponente der App.
@@ -92,7 +93,11 @@ fun RideReadyNavHost() {
             }
 
             composable<SettingsRoute> {
-                SettingsScreen()
+                val vm: SettingsViewModel = koinViewModel()
+
+                SettingsScreen(
+                    viewModel = vm
+                )
             }
         }
     }
