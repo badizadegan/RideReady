@@ -36,6 +36,9 @@ class HomeViewModel(
     // Öffentlicher, nur lesbarer Zustand für die UI.
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
+    // Hält den Namen der aktuell ausgewählten Stadt
+    private var currentCityName: String = "Leipzig"
+
     init {
         // Beobachtet die ausgewählte Stadt aus der Datenbank.
         // Wenn der Nutzer eine andere Stadt auswählt,
@@ -51,6 +54,8 @@ class HomeViewModel(
                 .collect { city ->
 
                 // fallback falls noch keine Stadt ausgewählt ist
+                    currentCityName = city?.name ?: "Leipzig"
+
                 val latitude = city?.latitude ?: 51.3397
                 val longitude = city?.longitude ?: 12.3731
 
@@ -77,7 +82,7 @@ class HomeViewModel(
 
         _uiState.value = HomeUiState.Loading
 
-            when (val result = getForecastUseCase(latitude, longitude)) {
+        when (val result = getForecastUseCase(latitude, longitude)) {
                 is AppResult.Success -> {
                     val days = result.data
 
@@ -89,6 +94,7 @@ class HomeViewModel(
                     _uiState.value =
                         if (days.isEmpty()) HomeUiState.Empty
                         else HomeUiState.Success(
+                            selectedCityName = currentCityName,
                             days = days,
                             bestDay = best?.first,
                             bestScore = best?.second

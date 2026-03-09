@@ -16,6 +16,7 @@ sealed class HomeUiState {
 
     //Enfalgreiche Anzeige mit Daten
     data class Success(
+        val selectedCityName: String,
         val days: List<ForecastDay>,
         val bestDay: ForecastDay? = null,
         val bestScore: RideScoreResult? = null
