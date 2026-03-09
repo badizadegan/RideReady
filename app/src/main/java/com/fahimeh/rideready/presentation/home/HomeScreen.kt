@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.fahimeh.rideready.core.extension.formatTemperature
 import com.fahimeh.rideready.core.extension.toDateLabel
 import com.fahimeh.rideready.core.extension.toDayLabel
 import com.fahimeh.rideready.presentation.home.component.BestDayCard
@@ -30,6 +31,7 @@ fun HomeScreen(
     onNavigateToCities: () -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
+    val settings by viewModel.settings.collectAsState()
     val state by viewModel.uiState.collectAsState()
 
     when (val uiState = state) {
@@ -74,7 +76,7 @@ fun HomeScreen(
                     items(uiState.days) { day ->
                         ForecastDayCard(
                             dayLabel = "${day.date.toDayLabel()} • ${day.date.toDateLabel()}",
-                            temperature = "${day.maxTempC}°C",
+                            temperature = "${formatTemperature(day.minTempC, settings.temperatureUnit)} / ${formatTemperature(day.maxTempC, settings.temperatureUnit)}",
                             onClick = {
                                 onNavigateToDetail(day.date.toString())
                             }

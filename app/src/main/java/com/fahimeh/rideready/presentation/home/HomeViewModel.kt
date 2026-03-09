@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.fahimeh.rideready.core.error.AppError
 import com.fahimeh.rideready.core.forecast.ForecastMemoryStore
 import com.fahimeh.rideready.core.result.AppResult
+import com.fahimeh.rideready.domain.model.AppSettings
 import com.fahimeh.rideready.domain.usecase.FindBestDayUseCase
 import com.fahimeh.rideready.domain.usecase.GetForecastUseCase
 import com.fahimeh.rideready.domain.usecase.ObserveSelectedCityUseCase
+import com.fahimeh.rideready.domain.usecase.ObserveSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,7 +29,8 @@ class HomeViewModel(
     private val getForecastUseCase: GetForecastUseCase,
     private val findBestDayUseCase: FindBestDayUseCase,
     private val memoryStore: ForecastMemoryStore,
-    private val observeSelectedCityUseCase: ObserveSelectedCityUseCase
+    private val observeSelectedCityUseCase: ObserveSelectedCityUseCase,
+    private val observeSettingsUseCase: ObserveSettingsUseCase
 ) : ViewModel() {
 
     // Interner Zustand, wird nur im ViewModel geändert.
@@ -36,14 +39,23 @@ class HomeViewModel(
     // Öffentlicher, nur lesbarer Zustand für die UI.
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
+    private val _settings = MutableStateFlow(AppSettings())
+    val settings: StateFlow<AppSettings> = _settings.asStateFlow()
+
     // Hält den Namen der aktuell ausgewählten Stadt
     private var currentCityName: String = "Leipzig"
 
     init {
-        // Beobachtet die ausgewählte Stadt aus der Datenbank.
-        // Wenn der Nutzer eine andere Stadt auswählt,
-        // wird automatisch ein neuer Forecast geladen.
+        observeSettings()
         observeSelectedCity()
+    }
+
+    private fun observeSettings() {
+        viewModelScope.launch {
+            observeSettingsUseCase().collect { appSettings ->
+                _settings.value = appSettings
+            }
+        }
     }
 
     private fun observeSelectedCity() {

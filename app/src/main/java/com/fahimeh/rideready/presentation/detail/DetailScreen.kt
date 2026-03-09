@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.fahimeh.rideready.core.extension.formatTemperature
 import com.fahimeh.rideready.presentation.detail.component.BestTimeCard
 import com.fahimeh.rideready.presentation.detail.component.DetailSummaryCard
 import com.fahimeh.rideready.presentation.detail.component.HourRow
@@ -50,8 +51,8 @@ fun DetailScreen(
         item {
             DetailSummaryCard(
                 dateLabel = "Detail for: ${day.date}",
-                minTemp = "${day.minTempC}°C",
-                maxTemp = "${day.maxTempC}°C",
+                minTemp = formatTemperature(day.minTempC, settings.temperatureUnit),
+                maxTemp = formatTemperature(day.maxTempC, settings.temperatureUnit),
                 rain = "${day.precipitationMm} mm",
                 wind = "${day.windSpeedKmh} km/h"
             )
@@ -74,7 +75,7 @@ fun DetailScreen(
         items(day.hourly) { h ->
             HourRow(
                 time = h.time.toLocalTime().toString(),
-                temp = "${h.temperatureC}°C",
+                temp = formatTemperature(h.temperatureC, settings.temperatureUnit),
                 rain = "${h.precipitationMm}mm",
                 wind = "${h.windSpeedKmh}km/h"
             )
