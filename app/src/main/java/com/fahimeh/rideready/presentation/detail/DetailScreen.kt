@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fahimeh.rideready.core.extension.formatTemperature
+import com.fahimeh.rideready.core.extension.toDateLabel
 import com.fahimeh.rideready.presentation.detail.component.BestTimeCard
 import com.fahimeh.rideready.presentation.detail.component.DetailSummaryCard
 import com.fahimeh.rideready.presentation.detail.component.HourRow
@@ -50,7 +51,7 @@ fun DetailScreen(
         // Summary Card
         item {
             DetailSummaryCard(
-                dateLabel = "Detail for: ${day.date}",
+                dateLabel = "Detail for: ${day.date.toDateLabel()}",
                 minTemp = formatTemperature(day.minTempC, settings.temperatureUnit),
                 maxTemp = formatTemperature(day.maxTempC, settings.temperatureUnit),
                 rain = "${day.precipitationMm} mm",
