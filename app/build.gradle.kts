@@ -58,9 +58,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    // Test
-    testImplementation(libs.junit4)
-    testImplementation(libs.kotlinx.coroutines.test)
+    // Datastore
+    implementation(libs.androidx.datastore.preferences)
 
     // Networking
     implementation(libs.retrofit.core)
