@@ -8,8 +8,11 @@ import com.fahimeh.rideready.domain.usecase.GetForecastUseCase
 import com.fahimeh.rideready.domain.usecase.GetSavedCitiesUseCase
 import com.fahimeh.rideready.domain.usecase.GetSelectedCityUseCase
 import com.fahimeh.rideready.domain.usecase.ObserveSelectedCityUseCase
+import com.fahimeh.rideready.domain.usecase.ObserveSettingsUseCase
 import com.fahimeh.rideready.domain.usecase.SaveCityUseCase
 import com.fahimeh.rideready.domain.usecase.SelectCityUseCase
+import com.fahimeh.rideready.domain.usecase.UpdateTemperatureUnitUseCase
+import com.fahimeh.rideready.domain.usecase.UpdateTimeWindowHoursUseCase
 import org.koin.dsl.module
 
 /**
@@ -33,4 +36,8 @@ val useCaseModule = module {
     single { GetSelectedCityUseCase(get()) }
 
     single { ObserveSelectedCityUseCase(get()) }
+
+    single { ObserveSettingsUseCase(get()) }
+    single { UpdateTemperatureUnitUseCase(get()) }
+    single { UpdateTimeWindowHoursUseCase(get()) }
 }

@@ -3,6 +3,7 @@ package com.fahimeh.rideready.di
 import com.fahimeh.rideready.presentation.city.CityViewModel
 import com.fahimeh.rideready.presentation.detail.DetailViewModel
 import com.fahimeh.rideready.presentation.home.HomeViewModel
+import com.fahimeh.rideready.presentation.settings.SettingsViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -30,5 +31,9 @@ val viewModelModule = module {
 
     viewModel {
         CityViewModel(get(), get(), get(), get())
+    }
+
+    viewModel {
+        SettingsViewModel(get(), get(), get())
     }
 }
