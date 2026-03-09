@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fahimeh.rideready.presentation.detail.component.BestTimeCard
@@ -26,8 +28,12 @@ fun DetailScreen(
     date: String,
     viewModel: DetailViewModel
 ) {
+    val settings by viewModel.settings.collectAsState()
     val day = viewModel.getDay(date)
-    val bestWindow = viewModel.getBestWindow(date)
+    val bestWindow = viewModel.getBestWindow(
+        dateString = date,
+        windowHours = settings.timeWindowHours
+    )
 
     if (day == null) {
         Text("No data")

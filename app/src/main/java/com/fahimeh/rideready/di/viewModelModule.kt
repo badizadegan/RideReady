@@ -25,7 +25,8 @@ val viewModelModule = module {
     viewModel {
         DetailViewModel(
             memoryStore = get(),
-            findBestTimeWindowUseCase = get()
+            findBestTimeWindowUseCase = get(),
+            observeSettingsUseCase = get()
         )
     }
 
