@@ -3,9 +3,14 @@ package com.fahimeh.rideready.presentation.settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -15,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fahimeh.rideready.domain.model.TemperatureUnit
-import org.koin.androidx.compose.koinViewModel
 
 /**
  * Einfacher Settings-Screen.
@@ -35,48 +39,66 @@ fun SettingsScreen(
         verticalArrangement = Arrangement.Top
     ) {
 
-        Text(
-            text = "Temperature unit",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(top = 24.dp, bottom = 8.dp)
-        )
+        SettingsSectionCard(title = "Temperature unit") {
+            TemperatureOption(
+                label = "Celsius",
+                selected = state.settings.temperatureUnit == TemperatureUnit.CELSIUS,
+                onClick = { viewModel.updateTemperatureUnit(TemperatureUnit.CELSIUS) }
+            )
 
-        TemperatureOption(
-            label = "Celsius",
-            selected = state.settings.temperatureUnit == TemperatureUnit.CELSIUS,
-            onClick = { viewModel.updateTemperatureUnit(TemperatureUnit.CELSIUS) }
-        )
+            TemperatureOption(
+                label = "Fahrenheit",
+                selected = state.settings.temperatureUnit == TemperatureUnit.FAHRENHEIT,
+                onClick = { viewModel.updateTemperatureUnit(TemperatureUnit.FAHRENHEIT) }
+            )
+        }
 
-        TemperatureOption(
-            label = "Fahrenheit",
-            selected = state.settings.temperatureUnit == TemperatureUnit.FAHRENHEIT,
-            onClick = { viewModel.updateTemperatureUnit(TemperatureUnit.FAHRENHEIT) }
-        )
+        Spacer(modifier = Modifier.height(16.dp))
 
-        HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+        SettingsSectionCard(title = "Time window length") {
+            TimeWindowOption(
+                hours = 1,
+                selected = state.settings.timeWindowHours == 1,
+                onClick = { viewModel.updateTimeWindow(1) }
+            )
 
-        Text(
-            text = "Time window length",
-            style = MaterialTheme.typography.titleMedium
-        )
+            TimeWindowOption(
+                hours = 2,
+                selected = state.settings.timeWindowHours == 2,
+                onClick = { viewModel.updateTimeWindow(2) }
+            )
 
-        TimeWindowOption(
-            hours = 1,
-            selected = state.settings.timeWindowHours == 1,
-            onClick = { viewModel.updateTimeWindow(1) }
-        )
+            TimeWindowOption(
+                hours = 3,
+                selected = state.settings.timeWindowHours == 3,
+                onClick = { viewModel.updateTimeWindow(3) }
+            )
+        }
+    }
+}
 
-        TimeWindowOption(
-            hours = 2,
-            selected = state.settings.timeWindowHours == 2,
-            onClick = { viewModel.updateTimeWindow(2) }
-        )
+@Composable
+private fun SettingsSectionCard(
+    title: String,
+    content: @Composable () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium
+            )
 
-        TimeWindowOption(
-            hours = 3,
-            selected = state.settings.timeWindowHours == 3,
-            onClick = { viewModel.updateTimeWindow(3) }
-        )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            content()
+        }
     }
 }
 
@@ -89,7 +111,9 @@ private fun TemperatureOption(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    Row {
+    Row(
+        modifier = Modifier.padding(vertical = 4.dp)
+    ) {
         RadioButton(
             selected = selected,
             onClick = onClick
@@ -111,7 +135,9 @@ private fun TimeWindowOption(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    Row {
+    Row(
+        modifier = Modifier.padding(vertical = 4.dp)
+    ) {
         RadioButton(
             selected = selected,
             onClick = onClick
