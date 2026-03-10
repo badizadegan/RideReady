@@ -57,6 +57,22 @@ Im Settings-Screen kann der Nutzer aktuell:
 
 ---
 
+## Screenshots
+
+### Home
+![Home Screen](screenshots/home.png)
+
+### Detail
+![Detail Screen](screenshots/detail.png)
+
+### Cities
+![Cities Screen](screenshots/cities.png)
+
+### Settings
+![Settings Screen](screenshots/settings.png)
+
+---
+
 ## Technologien
 
 Für dieses Projekt wurden folgende Technologien verwendet:
