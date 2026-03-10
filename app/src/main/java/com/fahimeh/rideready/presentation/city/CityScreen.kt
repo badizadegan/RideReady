@@ -36,7 +36,7 @@ fun CityScreen(
     ) {
         if (state.cities.isEmpty()) {
             Text(
-                text = "No cities saved yet",
+                text ="No cities saved yet.\nTap + to add your first city.",
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -44,7 +44,11 @@ fun CityScreen(
             )
         } else {
             LazyColumn(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                    top = 8.dp,
+                    bottom = 88.dp
+                )
             ) {
                 items(state.cities) { city ->
                     CityRow(

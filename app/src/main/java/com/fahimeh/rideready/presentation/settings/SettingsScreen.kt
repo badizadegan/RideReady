@@ -1,5 +1,6 @@
 package com.fahimeh.rideready.presentation.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fahimeh.rideready.domain.model.TemperatureUnit
@@ -112,7 +114,12 @@ private fun TemperatureOption(
     onClick: () -> Unit
 ) {
     Row(
-        modifier = Modifier.padding(vertical = 4.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
     ) {
         RadioButton(
             selected = selected,
@@ -121,6 +128,7 @@ private fun TemperatureOption(
 
         Text(
             text = label,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 12.dp)
         )
     }
@@ -136,7 +144,12 @@ private fun TimeWindowOption(
     onClick: () -> Unit
 ) {
     Row(
-        modifier = Modifier.padding(vertical = 4.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
     ) {
         RadioButton(
             selected = selected,
@@ -145,6 +158,7 @@ private fun TimeWindowOption(
 
         Text(
             text = "$hours h",
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 12.dp)
         )
     }
