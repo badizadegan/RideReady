@@ -1,17 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-
     alias(libs.plugins.jetbrains.kotlin.serialization)
-    // KSP statt KAPT für Annotation Processing (z. B. Room)
     alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.fahimeh.rideready"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.fahimeh.rideready"
@@ -19,7 +16,6 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -32,12 +28,24 @@ android {
             )
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
     buildFeatures {
         compose = true
+    }
+
+    packaging {
+        resources {
+            excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
+        }
     }
 }
 
@@ -51,6 +59,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.material3)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -59,36 +68,28 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    // Datastore
     implementation(libs.androidx.datastore.preferences)
 
-    // Networking
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.moshi)
     implementation(libs.okhttp.logging)
 
-    // Moshi
     implementation(libs.moshi.core)
     implementation(libs.moshi.kotlin)
 
-    // Coroutines
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)
 
-    // Koin
     implementation(libs.koin.core)
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
 
-    // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
-    // Navigation
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization)
 
-    // Material Icons
     implementation(libs.compose.material.icons)
 }
