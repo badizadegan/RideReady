@@ -8,5 +8,9 @@ import com.fahimeh.rideready.domain.model.City
  * Enthält nur Domain-Modelle.
  */
 data class CityUiState(
-    val cities: List<City> = emptyList()
+    val cities: List<City> = emptyList(),
+    val isAddCityDialogVisible: Boolean = false,
+    val citySearchQuery: String = "",
+    val citySuggestions: List<City> = emptyList(),
+    val addCityError: String? = null
 )

@@ -37,7 +37,11 @@ class CityRepositoryImpl(
         val existing = dao.getCityByName(city.name)
 
         if (existing == null) {
-            dao.insertCity(city.toEntity())
+            val cityId = dao.insertCity(city.toEntity())
+
+            if (dao.getSelectedCity() == null) {
+                dao.selectCity(cityId)
+            }
         }
     }
 

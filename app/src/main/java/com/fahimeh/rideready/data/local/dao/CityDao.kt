@@ -30,7 +30,7 @@ interface CityDao {
     fun observeSelectedCity(): kotlinx.coroutines.flow.Flow<CityEntity?>
 
     // Wird verwendet, um doppelte Einträge zu vermeiden.
-    @Query("SELECT * FROM cities WHERE name = :name LIMIT 1")
+    @Query("SELECT * FROM cities WHERE name = :name COLLATE NOCASE LIMIT 1")
     suspend fun getCityByName(name: String): CityEntity?
 
     // Setzt alle Städte auf nicht ausgewählt

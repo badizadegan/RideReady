@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.fahimeh.rideready.presentation.city.component.AddCityDialog
 import com.fahimeh.rideready.presentation.city.component.CityRow
 
 /**
@@ -60,9 +61,8 @@ fun CityScreen(
             }
         }
 
-        // Button zum Hinzufügen einer Stadt
         FloatingActionButton(
-            onClick = { viewModel.addDummyCity() },
+            onClick = { viewModel.showAddCityDialog() },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
@@ -70,6 +70,17 @@ fun CityScreen(
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "Add city"
+            )
+        }
+
+        if (state.isAddCityDialogVisible) {
+            AddCityDialog(
+                query = state.citySearchQuery,
+                suggestions = state.citySuggestions,
+                errorMessage = state.addCityError,
+                onQueryChange = viewModel::updateCitySearchQuery,
+                onCitySelected = viewModel::addCity,
+                onDismiss = viewModel::dismissAddCityDialog
             )
         }
     }
