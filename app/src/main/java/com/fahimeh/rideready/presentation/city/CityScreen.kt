@@ -77,6 +77,7 @@ fun CityScreen(
             AddCityDialog(
                 query = state.citySearchQuery,
                 suggestions = state.citySuggestions,
+                isSearching = state.isSearching,
                 errorMessage = state.addCityError,
                 onQueryChange = viewModel::updateCitySearchQuery,
                 onCitySelected = viewModel::addCity,

@@ -22,6 +22,7 @@ import com.fahimeh.rideready.domain.model.City
 fun AddCityDialog(
     query: String,
     suggestions: List<City>,
+    isSearching: Boolean,
     errorMessage: String?,
     onQueryChange: (String) -> Unit,
     onCitySelected: (City) -> Unit,
@@ -49,6 +50,14 @@ fun AddCityDialog(
                         }
                     }
                 )
+
+                if (isSearching) {
+                    Text(
+                        text = "Searching...",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
 
                 LazyColumn(
                     modifier = Modifier

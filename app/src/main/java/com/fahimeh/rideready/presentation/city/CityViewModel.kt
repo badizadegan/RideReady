@@ -2,11 +2,14 @@ package com.fahimeh.rideready.presentation.city
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fahimeh.rideready.core.result.AppResult
 import com.fahimeh.rideready.domain.model.City
 import com.fahimeh.rideready.domain.usecase.DeleteCityUseCase
 import com.fahimeh.rideready.domain.usecase.GetSavedCitiesUseCase
 import com.fahimeh.rideready.domain.usecase.SaveCityUseCase
+import com.fahimeh.rideready.domain.usecase.SearchCityUseCase
 import com.fahimeh.rideready.domain.usecase.SelectCityUseCase
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,12 +29,14 @@ class CityViewModel(
     private val getSavedCitiesUseCase: GetSavedCitiesUseCase,
     private val saveCityUseCase: SaveCityUseCase,
     private val deleteCityUseCase: DeleteCityUseCase,
-    private val selectCityUseCase: SelectCityUseCase
+    private val selectCityUseCase: SelectCityUseCase,
+    private val searchCityUseCase: SearchCityUseCase
 ) : ViewModel() {
 
     // UI-Zustand wird hier zentral gehalten
     private val _uiState = MutableStateFlow(CityUiState())
     val uiState: StateFlow<CityUiState> = _uiState.asStateFlow()
+    private var searchJob: Job? = null
 
     /**
      * Startet das Sammeln des Flow aus der Datenbank.
@@ -42,56 +47,54 @@ class CityViewModel(
                 _uiState.update { state ->
                     state.copy(
                         cities = list,
-                        citySuggestions = findCitySuggestions(
-                            query = state.citySearchQuery,
-                            savedCities = list
-                        )
+                        citySuggestions = removeSavedCities(state.citySuggestions, list)
                     )
                 }
             }
         }
     }
 
-    private val predefinedCities = listOf(
-        City(name = "Leipzig", latitude = 51.3397, longitude = 12.3731),
-        City(name = "Berlin", latitude = 52.5200, longitude = 13.4050),
-        City(name = "Munich", latitude = 48.1351, longitude = 11.5820),
-        City(name = "Hamburg", latitude = 53.5511, longitude = 9.9937),
-        City(name = "Cologne", latitude = 50.9375, longitude = 6.9603),
-        City(name = "Frankfurt", latitude = 50.1109, longitude = 8.6821),
-        City(name = "Stuttgart", latitude = 48.7758, longitude = 9.1829),
-        City(name = "Dusseldorf", latitude = 51.2277, longitude = 6.7735)
-    )
-
     fun showAddCityDialog() {
         _uiState.update { state ->
             state.copy(
                 isAddCityDialogVisible = true,
                 citySearchQuery = "",
-                citySuggestions = findCitySuggestions("", state.cities),
+                citySuggestions = emptyList(),
+                isSearching = false,
                 addCityError = null
             )
         }
     }
 
     fun dismissAddCityDialog() {
+        searchJob?.cancel()
         _uiState.update { state ->
             state.copy(
                 isAddCityDialogVisible = false,
                 citySearchQuery = "",
                 citySuggestions = emptyList(),
+                isSearching = false,
                 addCityError = null
             )
         }
     }
 
     fun updateCitySearchQuery(query: String) {
+        val trimmedQuery = query.trim()
+
         _uiState.update { state ->
             state.copy(
                 citySearchQuery = query,
-                citySuggestions = findCitySuggestions(query, state.cities),
+                citySuggestions = if (trimmedQuery.isBlank()) emptyList() else state.citySuggestions,
+                isSearching = false,
                 addCityError = null
             )
+        }
+
+        if (trimmedQuery.isNotBlank()) {
+            searchCities(trimmedQuery)
+        } else {
+            searchJob?.cancel()
         }
     }
 
@@ -99,7 +102,7 @@ class CityViewModel(
         viewModelScope.launch {
             val currentCities = _uiState.value.cities
 
-            if (currentCities.any { it.name.equals(city.name, ignoreCase = true) }) {
+            if (currentCities.any { it.isSameCity(city) }) {
                 _uiState.update { state ->
                     state.copy(addCityError = "${city.name} is already saved.")
                 }
@@ -127,18 +130,55 @@ class CityViewModel(
         }
     }
 
-    private fun findCitySuggestions(
-        query: String,
+    private fun searchCities(query: String) {
+        searchJob?.cancel()
+
+        searchJob = viewModelScope.launch {
+            searchCityUseCase(query).collect { result ->
+                when (result) {
+                    AppResult.Loading -> {
+                        _uiState.update { state ->
+                            state.copy(
+                                isSearching = true,
+                                addCityError = null
+                            )
+                        }
+                    }
+                    is AppResult.Success -> {
+                        _uiState.update { state ->
+                            state.copy(
+                                citySuggestions = removeSavedCities(result.data, state.cities),
+                                isSearching = false,
+                                addCityError = null
+                            )
+                        }
+                    }
+                    is AppResult.Error -> {
+                        _uiState.update { state ->
+                            state.copy(
+                                citySuggestions = emptyList(),
+                                isSearching = false,
+                                addCityError = "Could not search cities."
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun removeSavedCities(
+        cities: List<City>,
         savedCities: List<City>
     ): List<City> {
-        val savedNames = savedCities.map { it.name.lowercase() }.toSet()
-        val normalizedQuery = query.trim()
+        return cities.filterNot { city ->
+            savedCities.any { savedCity -> savedCity.isSameCity(city) }
+        }
+    }
 
-        return predefinedCities
-            .filterNot { it.name.lowercase() in savedNames }
-            .filter { city ->
-                normalizedQuery.isBlank() ||
-                    city.name.contains(normalizedQuery, ignoreCase = true)
-            }
+    private fun City.isSameCity(other: City): Boolean {
+        return name.equals(other.name, ignoreCase = true) &&
+            latitude == other.latitude &&
+            longitude == other.longitude
     }
 }

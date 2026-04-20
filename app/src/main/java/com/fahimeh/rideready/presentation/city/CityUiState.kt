@@ -12,5 +12,6 @@ data class CityUiState(
     val isAddCityDialogVisible: Boolean = false,
     val citySearchQuery: String = "",
     val citySuggestions: List<City> = emptyList(),
+    val isSearching: Boolean = false,
     val addCityError: String? = null
 )

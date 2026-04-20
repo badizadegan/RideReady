@@ -1,10 +1,12 @@
 package com.fahimeh.rideready.di
 
+import com.fahimeh.rideready.data.remote.api.GeocodingApiService
 import com.fahimeh.rideready.data.remote.api.WeatherApiService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -40,7 +42,19 @@ val networkModule = module {
             .build()
     }
 
+    single(named("geocodingRetrofit")) {
+        Retrofit.Builder()
+            .baseUrl("https://geocoding-api.open-meteo.com/")
+            .client(get())
+            .addConverterFactory(MoshiConverterFactory.create(get()))
+            .build()
+    }
+
     single<WeatherApiService> {
         get<Retrofit>().create(WeatherApiService::class.java)
+    }
+
+    single<GeocodingApiService> {
+        get<Retrofit>(named("geocodingRetrofit")).create(GeocodingApiService::class.java)
     }
 }

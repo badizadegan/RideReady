@@ -10,6 +10,7 @@ import com.fahimeh.rideready.domain.usecase.GetSelectedCityUseCase
 import com.fahimeh.rideready.domain.usecase.ObserveSelectedCityUseCase
 import com.fahimeh.rideready.domain.usecase.ObserveSettingsUseCase
 import com.fahimeh.rideready.domain.usecase.SaveCityUseCase
+import com.fahimeh.rideready.domain.usecase.SearchCityUseCase
 import com.fahimeh.rideready.domain.usecase.SelectCityUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateTemperatureUnitUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateTimeWindowHoursUseCase
@@ -31,6 +32,7 @@ val useCaseModule = module {
     single { GetSavedCitiesUseCase(repository = get()) }
     single { SaveCityUseCase(repository = get()) }
     single { DeleteCityUseCase(repository = get()) }
+    single { SearchCityUseCase(repository = get()) }
 
     single { SelectCityUseCase(get()) }
     single { GetSelectedCityUseCase(get()) }
