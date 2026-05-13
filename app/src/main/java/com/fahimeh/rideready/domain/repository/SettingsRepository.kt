@@ -22,4 +22,7 @@ interface SettingsRepository {
 
     // Speichert die Länge des Zeitfensters.
     suspend fun updateTimeWindowHours(hours: Int)
+
+    // Speichert den ausgewählten Aktivitätsmodus.
+    suspend fun updateRideMode(mode: String)
 }

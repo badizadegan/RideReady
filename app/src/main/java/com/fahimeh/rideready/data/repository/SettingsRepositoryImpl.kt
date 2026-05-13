@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.fahimeh.rideready.domain.model.AppSettings
+import com.fahimeh.rideready.domain.model.RideMode
 import com.fahimeh.rideready.domain.model.TemperatureUnit
 import com.fahimeh.rideready.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.Flow
@@ -32,6 +33,7 @@ class SettingsRepositoryImpl(
          */
         private val KEY_TEMPERATURE_UNIT = stringPreferencesKey("temperature_unit")
         private val KEY_TIME_WINDOW_HOURS = intPreferencesKey("time_window_hours")
+        private val KEY_RIDE_MODE = stringPreferencesKey("ride_mode")
     }
 
     override fun observeSettings(): Flow<AppSettings> {
@@ -44,7 +46,12 @@ class SettingsRepositoryImpl(
                 },
 
                 // Falls kein Wert gespeichert ist, wird der Standardwert genutzt
-                timeWindowHours = prefs[KEY_TIME_WINDOW_HOURS] ?: 2
+                timeWindowHours = prefs[KEY_TIME_WINDOW_HOURS] ?: 2,
+                selectedRideMode = when (prefs[KEY_RIDE_MODE]) {
+                    RideMode.WALK.name -> RideMode.WALK
+                    RideMode.RUN.name -> RideMode.RUN
+                    else -> RideMode.BIKE
+                }
             )
         }
     }
@@ -58,6 +65,12 @@ class SettingsRepositoryImpl(
     override suspend fun updateTimeWindowHours(hours: Int) {
         context.dataStore.edit { prefs ->
             prefs[KEY_TIME_WINDOW_HOURS] = hours
+        }
+    }
+
+    override suspend fun updateRideMode(mode: String) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_RIDE_MODE] = mode
         }
     }
 }

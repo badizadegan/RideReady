@@ -14,6 +14,7 @@ import com.fahimeh.rideready.domain.usecase.SearchCityUseCase
 import com.fahimeh.rideready.domain.usecase.SelectCityUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateTemperatureUnitUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateTimeWindowHoursUseCase
+import com.fahimeh.rideready.domain.usecase.UpdateRideModeUseCase
 import org.koin.dsl.module
 
 /**
@@ -42,4 +43,5 @@ val useCaseModule = module {
     single { ObserveSettingsUseCase(get()) }
     single { UpdateTemperatureUnitUseCase(get()) }
     single { UpdateTimeWindowHoursUseCase(get()) }
+    single { UpdateRideModeUseCase(get()) }
 }

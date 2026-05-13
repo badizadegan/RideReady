@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.fahimeh.rideready.domain.model.RideMode
 import com.fahimeh.rideready.domain.model.TemperatureUnit
 
 /**
@@ -37,6 +40,7 @@ fun SettingsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(16.dp),
         verticalArrangement = Arrangement.Top
     ) {
@@ -52,6 +56,28 @@ fun SettingsScreen(
                 label = "Fahrenheit",
                 selected = state.settings.temperatureUnit == TemperatureUnit.FAHRENHEIT,
                 onClick = { viewModel.updateTemperatureUnit(TemperatureUnit.FAHRENHEIT) }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        SettingsSectionCard(title = "Activity") {
+            RideModeOption(
+                label = "Bike",
+                selected = state.settings.selectedRideMode == RideMode.BIKE,
+                onClick = { viewModel.updateRideMode(RideMode.BIKE) }
+            )
+
+            RideModeOption(
+                label = "Walk",
+                selected = state.settings.selectedRideMode == RideMode.WALK,
+                onClick = { viewModel.updateRideMode(RideMode.WALK) }
+            )
+
+            RideModeOption(
+                label = "Run",
+                selected = state.settings.selectedRideMode == RideMode.RUN,
+                onClick = { viewModel.updateRideMode(RideMode.RUN) }
             )
         }
 
@@ -158,6 +184,36 @@ private fun TimeWindowOption(
 
         Text(
             text = "$hours h",
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(top = 12.dp)
+        )
+    }
+}
+
+/**
+ * Zeigt eine auswählbare Aktivität.
+ */
+@Composable
+private fun RideModeOption(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
+    ) {
+        RadioButton(
+            selected = selected,
+            onClick = onClick
+        )
+
+        Text(
+            text = label,
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 12.dp)
         )

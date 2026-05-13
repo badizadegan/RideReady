@@ -1,6 +1,7 @@
 package com.fahimeh.rideready.domain.usecase
 
 import com.fahimeh.rideready.domain.model.ForecastDay
+import com.fahimeh.rideready.domain.model.RideMode
 import com.fahimeh.rideready.domain.model.RideScoreResult
 
 /**
@@ -13,7 +14,9 @@ class FindBestDayUseCase(
     private val calculateRideScoreUseCase: CalculateRideScoreUseCase
 ) {
 
-    operator fun invoke(days: List<ForecastDay>
+    operator fun invoke(
+        days: List<ForecastDay>,
+        rideMode: RideMode = RideMode.BIKE
     ): Pair<ForecastDay, RideScoreResult>? {
 
         // Falls keine Daten vorhanden sind
@@ -21,7 +24,7 @@ class FindBestDayUseCase(
 
         return days
             // Jeder Tag wird mit einem Score bewertet
-            .map { day -> day to calculateRideScoreUseCase(day) }
+            .map { day -> day to calculateRideScoreUseCase(day, rideMode) }
 
             // Auswahl des Tages mit dem höchsten Score
             .maxByOrNull { (_, score) -> score.score }

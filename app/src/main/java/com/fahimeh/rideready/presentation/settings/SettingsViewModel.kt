@@ -2,8 +2,10 @@ package com.fahimeh.rideready.presentation.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fahimeh.rideready.domain.model.RideMode
 import com.fahimeh.rideready.domain.model.TemperatureUnit
 import com.fahimeh.rideready.domain.usecase.ObserveSettingsUseCase
+import com.fahimeh.rideready.domain.usecase.UpdateRideModeUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateTemperatureUnitUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateTimeWindowHoursUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +22,8 @@ import kotlinx.coroutines.launch
 class SettingsViewModel(
     private val observeSettingsUseCase: ObserveSettingsUseCase,
     private val updateTemperatureUnitUseCase: UpdateTemperatureUnitUseCase,
-    private val updateTimeWindowHoursUseCase: UpdateTimeWindowHoursUseCase
+    private val updateTimeWindowHoursUseCase: UpdateTimeWindowHoursUseCase,
+    private val updateRideModeUseCase: UpdateRideModeUseCase
 ) : ViewModel() {
 
     // Interner Zustand
@@ -53,6 +56,15 @@ class SettingsViewModel(
     fun updateTimeWindow(hours: Int) {
         viewModelScope.launch {
             updateTimeWindowHoursUseCase(hours)
+        }
+    }
+
+    /**
+     * Aktualisiert den Aktivitätsmodus.
+     */
+    fun updateRideMode(mode: RideMode) {
+        viewModelScope.launch {
+            updateRideModeUseCase(mode.name)
         }
     }
 }

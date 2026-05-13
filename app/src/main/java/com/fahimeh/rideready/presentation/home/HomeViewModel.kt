@@ -54,6 +54,7 @@ class HomeViewModel(
         viewModelScope.launch {
             observeSettingsUseCase().collect { appSettings ->
                 _settings.value = appSettings
+                updateBestDayRecommendation(appSettings)
             }
         }
     }
@@ -101,7 +102,7 @@ class HomeViewModel(
                     // Speichert die aktuell geladenen Forecast-Daten im Memory Store
                     memoryStore.update(days)
 
-                    val best = findBestDayUseCase(days)
+                    val best = findBestDayUseCase(days, _settings.value.selectedRideMode)
 
                     _uiState.value =
                         if (days.isEmpty()) HomeUiState.Empty
@@ -119,6 +120,19 @@ class HomeViewModel(
                     _uiState.value = HomeUiState.Loading
                 }
             }
+    }
+
+    private fun updateBestDayRecommendation(settings: AppSettings) {
+        val currentState = _uiState.value as? HomeUiState.Success ?: return
+        val days = memoryStore.days
+
+        if (days.isEmpty()) return
+
+        val best = findBestDayUseCase(days, settings.selectedRideMode)
+        _uiState.value = currentState.copy(
+            bestDay = best?.first,
+            bestScore = best?.second
+        )
     }
 
     /**

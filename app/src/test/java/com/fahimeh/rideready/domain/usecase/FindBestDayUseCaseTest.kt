@@ -1,6 +1,7 @@
 package com.fahimeh.rideready.domain.usecase
 
 import com.fahimeh.rideready.domain.model.ForecastDay
+import com.fahimeh.rideready.domain.model.RideMode
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
@@ -38,5 +39,32 @@ class FindBestDayUseCaseTest {
 
         assertNotNull(result)
         assertEquals(goodDay.date, result?.first?.date)
+    }
+
+    @Test
+    fun usesRideModeWhenSelectingBestDay() {
+        val breezyLightRainDay = ForecastDay(
+            date = LocalDate.of(2026, 4, 10),
+            minTempC = 14.0,
+            maxTempC = 22.0,
+            precipitationMm = 2.0,
+            windSpeedKmh = 25.0,
+            hourly = emptyList()
+        )
+
+        val hotCalmDay = ForecastDay(
+            date = LocalDate.of(2026, 4, 11),
+            minTempC = 24.0,
+            maxTempC = 34.0,
+            precipitationMm = 0.0,
+            windSpeedKmh = 8.0,
+            hourly = emptyList()
+        )
+
+        val bikeResult = useCase(listOf(breezyLightRainDay, hotCalmDay), RideMode.BIKE)
+        val runResult = useCase(listOf(breezyLightRainDay, hotCalmDay), RideMode.RUN)
+
+        assertEquals(hotCalmDay.date, bikeResult?.first?.date)
+        assertEquals(breezyLightRainDay.date, runResult?.first?.date)
     }
 }
