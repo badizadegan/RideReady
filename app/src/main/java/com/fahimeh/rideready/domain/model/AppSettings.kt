@@ -1,5 +1,7 @@
 package com.fahimeh.rideready.domain.model
 
+import java.time.DayOfWeek
+
 /**
  * Domain-Modell für einfache App-Einstellungen.
  */
@@ -10,7 +12,8 @@ data class AppSettings(
     val availableStartHour: Int = DEFAULT_AVAILABLE_START_HOUR,
     val availableEndHour: Int = DEFAULT_AVAILABLE_END_HOUR,
     val preferredMinTemp: Int = DEFAULT_PREFERRED_MIN_TEMP,
-    val preferredMaxTemp: Int = DEFAULT_PREFERRED_MAX_TEMP
+    val preferredMaxTemp: Int = DEFAULT_PREFERRED_MAX_TEMP,
+    val preferredDays: Set<DayOfWeek> = emptySet()
 ) {
     companion object {
         const val DEFAULT_AVAILABLE_START_HOUR = 6

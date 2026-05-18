@@ -2,6 +2,7 @@ package com.fahimeh.rideready.domain.repository
 
 import com.fahimeh.rideready.domain.model.AppSettings
 import kotlinx.coroutines.flow.Flow
+import java.time.DayOfWeek
 
 /**
  * Repository für App-Einstellungen.
@@ -37,4 +38,7 @@ interface SettingsRepository {
 
     // Speichert die bevorzugte Maximaltemperatur in Celsius.
     suspend fun updatePreferredMaxTemp(tempC: Int)
+
+    // Speichert die bevorzugten Wochentage.
+    suspend fun updatePreferredDays(days: Set<DayOfWeek>)
 }

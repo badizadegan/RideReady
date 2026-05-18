@@ -16,6 +16,7 @@ import com.fahimeh.rideready.domain.usecase.UpdateTemperatureUnitUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateAvailableEndHourUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateAvailableStartHourUseCase
 import com.fahimeh.rideready.domain.usecase.UpdatePreferredMaxTempUseCase
+import com.fahimeh.rideready.domain.usecase.UpdatePreferredDaysUseCase
 import com.fahimeh.rideready.domain.usecase.UpdatePreferredMinTempUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateTimeWindowHoursUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateRideModeUseCase
@@ -52,4 +53,5 @@ val useCaseModule = module {
     single { UpdateAvailableEndHourUseCase(get()) }
     single { UpdatePreferredMinTempUseCase(get()) }
     single { UpdatePreferredMaxTempUseCase(get()) }
+    single { UpdatePreferredDaysUseCase(get()) }
 }

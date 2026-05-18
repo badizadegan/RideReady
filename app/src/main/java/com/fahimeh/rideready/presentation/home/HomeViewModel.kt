@@ -106,7 +106,8 @@ class HomeViewModel(
                         days = days,
                         rideMode = _settings.value.selectedRideMode,
                         preferredMinTemp = _settings.value.preferredMinTemp,
-                        preferredMaxTemp = _settings.value.preferredMaxTemp
+                        preferredMaxTemp = _settings.value.preferredMaxTemp,
+                        preferredDays = _settings.value.preferredDays
                     )
 
                     _uiState.value =
@@ -137,7 +138,8 @@ class HomeViewModel(
             days = days,
             rideMode = settings.selectedRideMode,
             preferredMinTemp = settings.preferredMinTemp,
-            preferredMaxTemp = settings.preferredMaxTemp
+            preferredMaxTemp = settings.preferredMaxTemp,
+            preferredDays = settings.preferredDays
         )
         _uiState.value = currentState.copy(
             bestDay = best?.first,

@@ -4,6 +4,7 @@ import com.fahimeh.rideready.domain.model.ForecastDay
 import com.fahimeh.rideready.domain.model.AppSettings
 import com.fahimeh.rideready.domain.model.RideMode
 import com.fahimeh.rideready.domain.model.RideScoreResult
+import java.time.DayOfWeek
 
 /**
  * Verantwortlich für die Auswahl des besten Tages.
@@ -19,13 +20,22 @@ class FindBestDayUseCase(
         days: List<ForecastDay>,
         rideMode: RideMode = RideMode.BIKE,
         preferredMinTemp: Int = AppSettings.DEFAULT_PREFERRED_MIN_TEMP,
-        preferredMaxTemp: Int = AppSettings.DEFAULT_PREFERRED_MAX_TEMP
+        preferredMaxTemp: Int = AppSettings.DEFAULT_PREFERRED_MAX_TEMP,
+        preferredDays: Set<DayOfWeek> = emptySet()
     ): Pair<ForecastDay, RideScoreResult>? {
 
         // Falls keine Daten vorhanden sind
         if (days.isEmpty()) return null
 
-        return days
+        val filteredDays = if (preferredDays.isEmpty()) {
+            days
+        } else {
+            days.filter { it.date.dayOfWeek in preferredDays }
+        }
+
+        if (filteredDays.isEmpty()) return null
+
+        return filteredDays
             // Jeder Tag wird mit einem Score bewertet
             .map { day ->
                 day to calculateRideScoreUseCase(

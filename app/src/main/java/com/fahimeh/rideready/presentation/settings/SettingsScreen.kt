@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.fahimeh.rideready.core.extension.formatTemperature
 import com.fahimeh.rideready.domain.model.RideMode
 import com.fahimeh.rideready.domain.model.TemperatureUnit
+import java.time.DayOfWeek
 import kotlin.math.roundToInt
 
 /**
@@ -138,6 +140,36 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        SettingsSectionCard(title = "Preferred days") {
+            Text(
+                text = "If no day is selected, all days are considered.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            DaySelectionRow(
+                days = WEEKDAY_ROWS.first(),
+                selectedDays = state.settings.preferredDays,
+                onToggle = { day ->
+                    viewModel.updatePreferredDays(state.settings.preferredDays.toggle(day))
+                }
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            DaySelectionRow(
+                days = WEEKDAY_ROWS.last(),
+                selectedDays = state.settings.preferredDays,
+                onToggle = { day ->
+                    viewModel.updatePreferredDays(state.settings.preferredDays.toggle(day))
+                }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         SettingsSectionCard(title = "Time window length") {
             TimeWindowOption(
                 hours = 1,
@@ -185,6 +217,28 @@ fun SettingsScreen(
                 },
                 decreaseEnabled = state.settings.availableEndHour > state.settings.availableStartHour + 1,
                 increaseEnabled = state.settings.availableEndHour < 23
+            )
+        }
+    }
+}
+
+@Composable
+private fun DaySelectionRow(
+    days: List<DayOfWeek>,
+    selectedDays: Set<DayOfWeek>,
+    onToggle: (DayOfWeek) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        days.forEach { day ->
+            FilterChip(
+                selected = day in selectedDays,
+                onClick = { onToggle(day) },
+                label = {
+                    Text(text = day.shortLabel())
+                }
             )
         }
     }
@@ -430,3 +484,24 @@ private fun fahrenheitToCelsius(valueF: Int): Int = ((valueF - 32) * 5.0 / 9.0).
 
 private const val MIN_PREFERRED_TEMP_C = -20
 private const val MAX_PREFERRED_TEMP_C = 45
+
+private val WEEKDAY_ROWS = listOf(
+    listOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY),
+    listOf(DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+)
+
+private fun DayOfWeek.shortLabel(): String {
+    return when (this) {
+        DayOfWeek.MONDAY -> "Mon"
+        DayOfWeek.TUESDAY -> "Tue"
+        DayOfWeek.WEDNESDAY -> "Wed"
+        DayOfWeek.THURSDAY -> "Thu"
+        DayOfWeek.FRIDAY -> "Fri"
+        DayOfWeek.SATURDAY -> "Sat"
+        DayOfWeek.SUNDAY -> "Sun"
+    }
+}
+
+private fun Set<DayOfWeek>.toggle(day: DayOfWeek): Set<DayOfWeek> {
+    return if (day in this) this - day else this + day
+}

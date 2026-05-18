@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.fahimeh.rideready.domain.model.AppSettings
 import com.fahimeh.rideready.domain.model.RideMode
@@ -11,6 +12,7 @@ import com.fahimeh.rideready.domain.model.TemperatureUnit
 import com.fahimeh.rideready.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.DayOfWeek
 
 // Erstellt eine DataStore-Instanz für die App-Einstellungen
 private val Context.dataStore by preferencesDataStore(name = "app_settings")
@@ -38,6 +40,7 @@ class SettingsRepositoryImpl(
         private val KEY_AVAILABLE_END_HOUR = intPreferencesKey("available_end_hour")
         private val KEY_PREFERRED_MIN_TEMP = intPreferencesKey("preferred_min_temp")
         private val KEY_PREFERRED_MAX_TEMP = intPreferencesKey("preferred_max_temp")
+        private val KEY_PREFERRED_DAYS = stringSetPreferencesKey("preferred_days")
     }
 
     override fun observeSettings(): Flow<AppSettings> {
@@ -63,7 +66,11 @@ class SettingsRepositoryImpl(
                 preferredMinTemp = prefs[KEY_PREFERRED_MIN_TEMP]
                     ?: AppSettings.DEFAULT_PREFERRED_MIN_TEMP,
                 preferredMaxTemp = prefs[KEY_PREFERRED_MAX_TEMP]
-                    ?: AppSettings.DEFAULT_PREFERRED_MAX_TEMP
+                    ?: AppSettings.DEFAULT_PREFERRED_MAX_TEMP,
+                preferredDays = prefs[KEY_PREFERRED_DAYS]
+                    ?.mapNotNull { dayName -> dayName.toDayOfWeekOrNull() }
+                    ?.toSet()
+                    ?: emptySet()
             )
         }
     }
@@ -109,4 +116,14 @@ class SettingsRepositoryImpl(
             prefs[KEY_PREFERRED_MAX_TEMP] = tempC
         }
     }
+
+    override suspend fun updatePreferredDays(days: Set<DayOfWeek>) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_PREFERRED_DAYS] = days.map { it.name }.toSet()
+        }
+    }
+}
+
+private fun String.toDayOfWeekOrNull(): DayOfWeek? {
+    return runCatching { DayOfWeek.valueOf(this) }.getOrNull()
 }

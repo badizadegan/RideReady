@@ -8,6 +8,7 @@ import com.fahimeh.rideready.domain.usecase.ObserveSettingsUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateAvailableEndHourUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateAvailableStartHourUseCase
 import com.fahimeh.rideready.domain.usecase.UpdatePreferredMaxTempUseCase
+import com.fahimeh.rideready.domain.usecase.UpdatePreferredDaysUseCase
 import com.fahimeh.rideready.domain.usecase.UpdatePreferredMinTempUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateRideModeUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateTemperatureUnitUseCase
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.DayOfWeek
 
 /**
  * ViewModel für den Settings-Screen.
@@ -31,7 +33,8 @@ class SettingsViewModel(
     private val updateAvailableStartHourUseCase: UpdateAvailableStartHourUseCase,
     private val updateAvailableEndHourUseCase: UpdateAvailableEndHourUseCase,
     private val updatePreferredMinTempUseCase: UpdatePreferredMinTempUseCase,
-    private val updatePreferredMaxTempUseCase: UpdatePreferredMaxTempUseCase
+    private val updatePreferredMaxTempUseCase: UpdatePreferredMaxTempUseCase,
+    private val updatePreferredDaysUseCase: UpdatePreferredDaysUseCase
 ) : ViewModel() {
 
     // Interner Zustand
@@ -97,6 +100,12 @@ class SettingsViewModel(
     fun updatePreferredMaxTemp(tempC: Int) {
         viewModelScope.launch {
             updatePreferredMaxTempUseCase(tempC)
+        }
+    }
+
+    fun updatePreferredDays(days: Set<DayOfWeek>) {
+        viewModelScope.launch {
+            updatePreferredDaysUseCase(days)
         }
     }
 }
