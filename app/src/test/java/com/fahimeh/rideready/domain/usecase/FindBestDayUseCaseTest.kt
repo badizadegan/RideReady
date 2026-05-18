@@ -67,4 +67,34 @@ class FindBestDayUseCaseTest {
         assertEquals(hotCalmDay.date, bikeResult?.first?.date)
         assertEquals(breezyLightRainDay.date, runResult?.first?.date)
     }
+
+    @Test
+    fun usesPreferredTemperatureRangeWhenSelectingBestDay() {
+        val mildDay = ForecastDay(
+            date = LocalDate.of(2026, 4, 12),
+            minTempC = 14.0,
+            maxTempC = 22.0,
+            precipitationMm = 0.0,
+            windSpeedKmh = 8.0,
+            hourly = emptyList()
+        )
+
+        val warmDay = ForecastDay(
+            date = LocalDate.of(2026, 4, 13),
+            minTempC = 20.0,
+            maxTempC = 28.0,
+            precipitationMm = 0.0,
+            windSpeedKmh = 8.0,
+            hourly = emptyList()
+        )
+
+        val result = useCase(
+            days = listOf(mildDay, warmDay),
+            rideMode = RideMode.BIKE,
+            preferredMinTemp = 20,
+            preferredMaxTemp = 26
+        )
+
+        assertEquals(warmDay.date, result?.first?.date)
+    }
 }

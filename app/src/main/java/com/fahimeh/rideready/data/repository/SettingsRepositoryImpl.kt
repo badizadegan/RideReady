@@ -36,6 +36,8 @@ class SettingsRepositoryImpl(
         private val KEY_RIDE_MODE = stringPreferencesKey("ride_mode")
         private val KEY_AVAILABLE_START_HOUR = intPreferencesKey("available_start_hour")
         private val KEY_AVAILABLE_END_HOUR = intPreferencesKey("available_end_hour")
+        private val KEY_PREFERRED_MIN_TEMP = intPreferencesKey("preferred_min_temp")
+        private val KEY_PREFERRED_MAX_TEMP = intPreferencesKey("preferred_max_temp")
     }
 
     override fun observeSettings(): Flow<AppSettings> {
@@ -57,7 +59,11 @@ class SettingsRepositoryImpl(
                 availableStartHour = prefs[KEY_AVAILABLE_START_HOUR]
                     ?: AppSettings.DEFAULT_AVAILABLE_START_HOUR,
                 availableEndHour = prefs[KEY_AVAILABLE_END_HOUR]
-                    ?: AppSettings.DEFAULT_AVAILABLE_END_HOUR
+                    ?: AppSettings.DEFAULT_AVAILABLE_END_HOUR,
+                preferredMinTemp = prefs[KEY_PREFERRED_MIN_TEMP]
+                    ?: AppSettings.DEFAULT_PREFERRED_MIN_TEMP,
+                preferredMaxTemp = prefs[KEY_PREFERRED_MAX_TEMP]
+                    ?: AppSettings.DEFAULT_PREFERRED_MAX_TEMP
             )
         }
     }
@@ -89,6 +95,18 @@ class SettingsRepositoryImpl(
     override suspend fun updateAvailableEndHour(hour: Int) {
         context.dataStore.edit { prefs ->
             prefs[KEY_AVAILABLE_END_HOUR] = hour
+        }
+    }
+
+    override suspend fun updatePreferredMinTemp(tempC: Int) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_PREFERRED_MIN_TEMP] = tempC
+        }
+    }
+
+    override suspend fun updatePreferredMaxTemp(tempC: Int) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_PREFERRED_MAX_TEMP] = tempC
         }
     }
 }

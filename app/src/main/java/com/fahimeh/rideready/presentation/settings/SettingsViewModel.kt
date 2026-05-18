@@ -7,6 +7,8 @@ import com.fahimeh.rideready.domain.model.TemperatureUnit
 import com.fahimeh.rideready.domain.usecase.ObserveSettingsUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateAvailableEndHourUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateAvailableStartHourUseCase
+import com.fahimeh.rideready.domain.usecase.UpdatePreferredMaxTempUseCase
+import com.fahimeh.rideready.domain.usecase.UpdatePreferredMinTempUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateRideModeUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateTemperatureUnitUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateTimeWindowHoursUseCase
@@ -27,7 +29,9 @@ class SettingsViewModel(
     private val updateTimeWindowHoursUseCase: UpdateTimeWindowHoursUseCase,
     private val updateRideModeUseCase: UpdateRideModeUseCase,
     private val updateAvailableStartHourUseCase: UpdateAvailableStartHourUseCase,
-    private val updateAvailableEndHourUseCase: UpdateAvailableEndHourUseCase
+    private val updateAvailableEndHourUseCase: UpdateAvailableEndHourUseCase,
+    private val updatePreferredMinTempUseCase: UpdatePreferredMinTempUseCase,
+    private val updatePreferredMaxTempUseCase: UpdatePreferredMaxTempUseCase
 ) : ViewModel() {
 
     // Interner Zustand
@@ -81,6 +85,18 @@ class SettingsViewModel(
     fun updateAvailableEndHour(hour: Int) {
         viewModelScope.launch {
             updateAvailableEndHourUseCase(hour)
+        }
+    }
+
+    fun updatePreferredMinTemp(tempC: Int) {
+        viewModelScope.launch {
+            updatePreferredMinTempUseCase(tempC)
+        }
+    }
+
+    fun updatePreferredMaxTemp(tempC: Int) {
+        viewModelScope.launch {
+            updatePreferredMaxTempUseCase(tempC)
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.fahimeh.rideready.domain.usecase
 
+import com.fahimeh.rideready.domain.model.AppSettings
 import com.fahimeh.rideready.domain.model.ForecastDay
 import com.fahimeh.rideready.domain.model.RideMode
 import com.fahimeh.rideready.domain.model.RideScoreResult
@@ -8,17 +9,17 @@ import com.fahimeh.rideready.domain.model.RideScoreResult
  * Berechnet einen einfachen Score (0..100) für einen Tag.
  */
 class CalculateRideScoreUseCase {
-    private val idealRange = 15.0..25.0
-    private val tolerableRange = 10.0..30.0
-
     operator fun invoke(
         day: ForecastDay,
-        rideMode: RideMode = RideMode.BIKE
+        rideMode: RideMode = RideMode.BIKE,
+        preferredMinTemp: Int = AppSettings.DEFAULT_PREFERRED_MIN_TEMP,
+        preferredMaxTemp: Int = AppSettings.DEFAULT_PREFERRED_MAX_TEMP
     ): RideScoreResult {
         var score = 100
 
+        val preferredRange = normalizePreferredRange(preferredMinTemp, preferredMaxTemp)
         val avgTemp = (day.minTempC + day.maxTempC) / 2
-        score -= temperaturePenalty(avgTemp, rideMode)
+        score -= temperaturePenalty(avgTemp, rideMode, preferredRange)
         score -= precipitationPenalty(day.precipitationMm, rideMode)
         score -= windPenalty(day.windSpeedKmh, rideMode)
 
@@ -27,8 +28,8 @@ class CalculateRideScoreUseCase {
         val reason = when {
             day.precipitationMm > precipitationReasonThreshold(rideMode) -> "High precipitation"
             day.windSpeedKmh > windReasonThreshold(rideMode) -> "Strong wind"
-            avgTemp < temperatureLowReasonThreshold(rideMode) -> "Too cold"
-            avgTemp > temperatureHighReasonThreshold(rideMode) -> "Too hot"
+            avgTemp < temperatureLowReasonThreshold(rideMode, preferredRange) -> "Too cold"
+            avgTemp > temperatureHighReasonThreshold(rideMode, preferredRange) -> "Too hot"
             else -> "Good overall conditions"
         }
 
@@ -38,21 +39,27 @@ class CalculateRideScoreUseCase {
         )
     }
 
-    private fun temperaturePenalty(avgTemp: Double, rideMode: RideMode): Int {
+    private fun temperaturePenalty(
+        avgTemp: Double,
+        rideMode: RideMode,
+        preferredRange: ClosedFloatingPointRange<Double>
+    ): Int {
+        val tolerableRange = tolerableTemperatureRange(rideMode, preferredRange)
+
         return when (rideMode) {
             RideMode.BIKE -> when {
                 avgTemp !in tolerableRange -> 30
-                avgTemp !in idealRange -> 15
+                avgTemp !in preferredRange -> 15
                 else -> 0
             }
             RideMode.WALK -> when {
-                avgTemp < 8.0 || avgTemp > 30.0 -> 25
-                avgTemp < 12.0 || avgTemp > 26.0 -> 10
+                avgTemp !in tolerableRange -> 25
+                avgTemp !in preferredRange -> 10
                 else -> 0
             }
             RideMode.RUN -> when {
-                avgTemp < 10.0 || avgTemp > 28.0 -> 30
-                avgTemp < 13.0 || avgTemp > 24.0 -> 20
+                avgTemp !in tolerableRange -> 30
+                avgTemp !in preferredRange -> 20
                 else -> 0
             }
         }
@@ -114,19 +121,37 @@ class CalculateRideScoreUseCase {
         }
     }
 
-    private fun temperatureLowReasonThreshold(rideMode: RideMode): Double {
-        return when (rideMode) {
-            RideMode.BIKE -> 10.0
-            RideMode.WALK -> 8.0
-            RideMode.RUN -> 10.0
-        }
+    private fun temperatureLowReasonThreshold(
+        rideMode: RideMode,
+        preferredRange: ClosedFloatingPointRange<Double>
+    ): Double {
+        return tolerableTemperatureRange(rideMode, preferredRange).start
     }
 
-    private fun temperatureHighReasonThreshold(rideMode: RideMode): Double {
+    private fun temperatureHighReasonThreshold(
+        rideMode: RideMode,
+        preferredRange: ClosedFloatingPointRange<Double>
+    ): Double {
+        return tolerableTemperatureRange(rideMode, preferredRange).endInclusive
+    }
+
+    private fun normalizePreferredRange(
+        preferredMinTemp: Int,
+        preferredMaxTemp: Int
+    ): ClosedFloatingPointRange<Double> {
+        val min = minOf(preferredMinTemp, preferredMaxTemp).toDouble()
+        val max = maxOf(preferredMinTemp, preferredMaxTemp).toDouble()
+        return min..max
+    }
+
+    private fun tolerableTemperatureRange(
+        rideMode: RideMode,
+        preferredRange: ClosedFloatingPointRange<Double>
+    ): ClosedFloatingPointRange<Double> {
         return when (rideMode) {
-            RideMode.BIKE -> 30.0
-            RideMode.WALK -> 30.0
-            RideMode.RUN -> 28.0
+            RideMode.BIKE -> (preferredRange.start - 5.0)..(preferredRange.endInclusive + 5.0)
+            RideMode.WALK -> (preferredRange.start - 4.0)..(preferredRange.endInclusive + 5.0)
+            RideMode.RUN -> (preferredRange.start - 3.0)..(preferredRange.endInclusive + 4.0)
         }
     }
 }

@@ -24,8 +24,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.fahimeh.rideready.core.extension.formatTemperature
 import com.fahimeh.rideready.domain.model.RideMode
 import com.fahimeh.rideready.domain.model.TemperatureUnit
+import kotlin.math.roundToInt
 
 /**
  * Einfacher Settings-Screen.
@@ -79,6 +81,58 @@ fun SettingsScreen(
                 label = "Run",
                 selected = state.settings.selectedRideMode == RideMode.RUN,
                 onClick = { viewModel.updateRideMode(RideMode.RUN) }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        SettingsSectionCard(title = "Preferred temperature range") {
+            TemperatureStepper(
+                label = "Minimum",
+                temperatureC = state.settings.preferredMinTemp,
+                unit = state.settings.temperatureUnit,
+                onDecrease = {
+                    viewModel.updatePreferredMinTemp(
+                        decrementTemperature(
+                            temperatureC = state.settings.preferredMinTemp,
+                            unit = state.settings.temperatureUnit
+                        )
+                    )
+                },
+                onIncrease = {
+                    viewModel.updatePreferredMinTemp(
+                        incrementTemperature(
+                            temperatureC = state.settings.preferredMinTemp,
+                            unit = state.settings.temperatureUnit
+                        )
+                    )
+                },
+                decreaseEnabled = state.settings.preferredMinTemp > MIN_PREFERRED_TEMP_C,
+                increaseEnabled = state.settings.preferredMinTemp < state.settings.preferredMaxTemp - 1
+            )
+
+            TemperatureStepper(
+                label = "Maximum",
+                temperatureC = state.settings.preferredMaxTemp,
+                unit = state.settings.temperatureUnit,
+                onDecrease = {
+                    viewModel.updatePreferredMaxTemp(
+                        decrementTemperature(
+                            temperatureC = state.settings.preferredMaxTemp,
+                            unit = state.settings.temperatureUnit
+                        )
+                    )
+                },
+                onIncrease = {
+                    viewModel.updatePreferredMaxTemp(
+                        incrementTemperature(
+                            temperatureC = state.settings.preferredMaxTemp,
+                            unit = state.settings.temperatureUnit
+                        )
+                    )
+                },
+                decreaseEnabled = state.settings.preferredMaxTemp > state.settings.preferredMinTemp + 1,
+                increaseEnabled = state.settings.preferredMaxTemp < MAX_PREFERRED_TEMP_C
             )
         }
 
@@ -252,6 +306,58 @@ private fun RideModeOption(
 }
 
 @Composable
+private fun TemperatureStepper(
+    label: String,
+    temperatureC: Int,
+    unit: TemperatureUnit,
+    onDecrease: () -> Unit,
+    onIncrease: () -> Unit,
+    decreaseEnabled: Boolean,
+    increaseEnabled: Boolean
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = formatTemperature(temperatureC.toDouble(), unit),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            TextButton(
+                onClick = onDecrease,
+                enabled = decreaseEnabled
+            ) {
+                Text(text = "-")
+            }
+
+            Text(
+                text = formatTemperature(temperatureC.toDouble(), unit),
+                style = MaterialTheme.typography.bodyLarge
+            )
+
+            TextButton(
+                onClick = onIncrease,
+                enabled = increaseEnabled
+            ) {
+                Text(text = "+")
+            }
+        }
+    }
+}
+
+@Composable
 private fun HourStepper(
     label: String,
     hour: Int,
@@ -303,3 +409,24 @@ private fun HourStepper(
 }
 
 private fun formatHour(hour: Int): String = "%02d:00".format(hour)
+
+private fun incrementTemperature(temperatureC: Int, unit: TemperatureUnit): Int {
+    return when (unit) {
+        TemperatureUnit.CELSIUS -> temperatureC + 1
+        TemperatureUnit.FAHRENHEIT -> fahrenheitToCelsius(celsiusToFahrenheit(temperatureC) + 1)
+    }
+}
+
+private fun decrementTemperature(temperatureC: Int, unit: TemperatureUnit): Int {
+    return when (unit) {
+        TemperatureUnit.CELSIUS -> temperatureC - 1
+        TemperatureUnit.FAHRENHEIT -> fahrenheitToCelsius(celsiusToFahrenheit(temperatureC) - 1)
+    }
+}
+
+private fun celsiusToFahrenheit(valueC: Int): Int = ((valueC * 9.0 / 5.0) + 32).roundToInt()
+
+private fun fahrenheitToCelsius(valueF: Int): Int = ((valueF - 32) * 5.0 / 9.0).roundToInt()
+
+private const val MIN_PREFERRED_TEMP_C = -20
+private const val MAX_PREFERRED_TEMP_C = 45

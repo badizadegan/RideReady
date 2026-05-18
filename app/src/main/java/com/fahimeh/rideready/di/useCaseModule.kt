@@ -15,6 +15,8 @@ import com.fahimeh.rideready.domain.usecase.SelectCityUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateTemperatureUnitUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateAvailableEndHourUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateAvailableStartHourUseCase
+import com.fahimeh.rideready.domain.usecase.UpdatePreferredMaxTempUseCase
+import com.fahimeh.rideready.domain.usecase.UpdatePreferredMinTempUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateTimeWindowHoursUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateRideModeUseCase
 import org.koin.dsl.module
@@ -48,4 +50,6 @@ val useCaseModule = module {
     single { UpdateRideModeUseCase(get()) }
     single { UpdateAvailableStartHourUseCase(get()) }
     single { UpdateAvailableEndHourUseCase(get()) }
+    single { UpdatePreferredMinTempUseCase(get()) }
+    single { UpdatePreferredMaxTempUseCase(get()) }
 }

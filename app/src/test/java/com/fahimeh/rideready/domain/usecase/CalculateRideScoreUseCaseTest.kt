@@ -2,6 +2,7 @@ package com.fahimeh.rideready.domain.usecase
 
 import com.fahimeh.rideready.domain.model.ForecastDay
 import com.fahimeh.rideready.domain.model.RideMode
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.LocalDate
@@ -75,5 +76,28 @@ class CalculateRideScoreUseCaseTest {
         val runScore = useCase(day, RideMode.RUN)
 
         assertTrue(runScore.score < bikeScore.score)
+    }
+
+    @Test
+    fun preferredTemperatureRange_affectsBikeTemperatureScore() {
+        val day = ForecastDay(
+            date = LocalDate.of(2026, 5, 10),
+            minTempC = 14.0,
+            maxTempC = 22.0,
+            precipitationMm = 0.0,
+            windSpeedKmh = 10.0,
+            hourly = emptyList()
+        )
+
+        val defaultResult = useCase(day, RideMode.BIKE)
+        val warmerPreferenceResult = useCase(
+            day = day,
+            rideMode = RideMode.BIKE,
+            preferredMinTemp = 20,
+            preferredMaxTemp = 26
+        )
+
+        assertEquals(100, defaultResult.score)
+        assertTrue(warmerPreferenceResult.score < defaultResult.score)
     }
 }

@@ -102,7 +102,12 @@ class HomeViewModel(
                     // Speichert die aktuell geladenen Forecast-Daten im Memory Store
                     memoryStore.update(days)
 
-                    val best = findBestDayUseCase(days, _settings.value.selectedRideMode)
+                    val best = findBestDayUseCase(
+                        days = days,
+                        rideMode = _settings.value.selectedRideMode,
+                        preferredMinTemp = _settings.value.preferredMinTemp,
+                        preferredMaxTemp = _settings.value.preferredMaxTemp
+                    )
 
                     _uiState.value =
                         if (days.isEmpty()) HomeUiState.Empty
@@ -128,7 +133,12 @@ class HomeViewModel(
 
         if (days.isEmpty()) return
 
-        val best = findBestDayUseCase(days, settings.selectedRideMode)
+        val best = findBestDayUseCase(
+            days = days,
+            rideMode = settings.selectedRideMode,
+            preferredMinTemp = settings.preferredMinTemp,
+            preferredMaxTemp = settings.preferredMaxTemp
+        )
         _uiState.value = currentState.copy(
             bestDay = best?.first,
             bestScore = best?.second

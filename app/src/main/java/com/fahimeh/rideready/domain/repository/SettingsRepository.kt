@@ -31,4 +31,10 @@ interface SettingsRepository {
 
     // Speichert die verfügbare Endstunde.
     suspend fun updateAvailableEndHour(hour: Int)
+
+    // Speichert die bevorzugte Mindesttemperatur in Celsius.
+    suspend fun updatePreferredMinTemp(tempC: Int)
+
+    // Speichert die bevorzugte Maximaltemperatur in Celsius.
+    suspend fun updatePreferredMaxTemp(tempC: Int)
 }
