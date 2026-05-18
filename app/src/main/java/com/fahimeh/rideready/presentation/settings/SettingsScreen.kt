@@ -17,6 +17,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -100,6 +101,36 @@ fun SettingsScreen(
                 hours = 3,
                 selected = state.settings.timeWindowHours == 3,
                 onClick = { viewModel.updateTimeWindow(3) }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        SettingsSectionCard(title = "Available hours") {
+            HourStepper(
+                label = "Start hour",
+                hour = state.settings.availableStartHour,
+                onDecrease = {
+                    viewModel.updateAvailableStartHour(state.settings.availableStartHour - 1)
+                },
+                onIncrease = {
+                    viewModel.updateAvailableStartHour(state.settings.availableStartHour + 1)
+                },
+                decreaseEnabled = state.settings.availableStartHour > 0,
+                increaseEnabled = state.settings.availableStartHour < state.settings.availableEndHour - 1
+            )
+
+            HourStepper(
+                label = "End hour",
+                hour = state.settings.availableEndHour,
+                onDecrease = {
+                    viewModel.updateAvailableEndHour(state.settings.availableEndHour - 1)
+                },
+                onIncrease = {
+                    viewModel.updateAvailableEndHour(state.settings.availableEndHour + 1)
+                },
+                decreaseEnabled = state.settings.availableEndHour > state.settings.availableStartHour + 1,
+                increaseEnabled = state.settings.availableEndHour < 23
             )
         }
     }
@@ -219,3 +250,56 @@ private fun RideModeOption(
         )
     }
 }
+
+@Composable
+private fun HourStepper(
+    label: String,
+    hour: Int,
+    onDecrease: () -> Unit,
+    onIncrease: () -> Unit,
+    decreaseEnabled: Boolean,
+    increaseEnabled: Boolean
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = formatHour(hour),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            TextButton(
+                onClick = onDecrease,
+                enabled = decreaseEnabled
+            ) {
+                Text(text = "-")
+            }
+
+            Text(
+                text = formatHour(hour),
+                style = MaterialTheme.typography.bodyLarge
+            )
+
+            TextButton(
+                onClick = onIncrease,
+                enabled = increaseEnabled
+            ) {
+                Text(text = "+")
+            }
+        }
+    }
+}
+
+private fun formatHour(hour: Int): String = "%02d:00".format(hour)

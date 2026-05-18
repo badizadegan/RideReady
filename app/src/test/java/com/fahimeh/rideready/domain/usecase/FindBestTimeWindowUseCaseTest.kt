@@ -41,4 +41,34 @@ class FindBestTimeWindowUseCaseTest {
         assertEquals(6, result?.first?.start?.hour)
         assertEquals(8, result?.first?.end?.hour)
     }
+
+    @Test
+    fun respectsAvailableHours() {
+        val hourly = listOf(
+            HourlyForecast(LocalDateTime.of(2026, 3, 10, 6, 0), 10.0, 0.0, 8.0),
+            HourlyForecast(LocalDateTime.of(2026, 3, 10, 7, 0), 11.0, 2.0, 18.0),
+            HourlyForecast(LocalDateTime.of(2026, 3, 10, 8, 0), 12.0, 0.0, 10.0),
+            HourlyForecast(LocalDateTime.of(2026, 3, 10, 9, 0), 13.0, 0.0, 10.0)
+        )
+
+        val day = ForecastDay(
+            date = LocalDate.of(2026, 3, 10),
+            minTempC = 8.0,
+            maxTempC = 14.0,
+            precipitationMm = 0.0,
+            windSpeedKmh = 10.0,
+            hourly = hourly
+        )
+
+        val result = useCase(
+            day = day,
+            windowHours = 2,
+            startHour = 7,
+            endHourExclusive = 10
+        )
+
+        assertNotNull(result)
+        assertEquals(8, result?.first?.start?.hour)
+        assertEquals(10, result?.first?.end?.hour)
+    }
 }

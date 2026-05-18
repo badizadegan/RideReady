@@ -25,4 +25,10 @@ interface SettingsRepository {
 
     // Speichert den ausgewählten Aktivitätsmodus.
     suspend fun updateRideMode(mode: String)
+
+    // Speichert die verfügbare Startstunde.
+    suspend fun updateAvailableStartHour(hour: Int)
+
+    // Speichert die verfügbare Endstunde.
+    suspend fun updateAvailableEndHour(hour: Int)
 }

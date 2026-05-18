@@ -55,9 +55,13 @@ class DetailViewModel(
      */
     fun getBestWindow(dateString: String, windowHours: Int): Pair<TimeWindow, RideScoreResult>? {
         val day = getDay(dateString) ?: return null
+        val settings = _settings.value
+
         return findBestTimeWindowUseCase(
             day = day,
-            windowHours = windowHours
+            windowHours = windowHours,
+            startHour = settings.availableStartHour,
+            endHourExclusive = settings.availableEndHour
         )
     }
 }

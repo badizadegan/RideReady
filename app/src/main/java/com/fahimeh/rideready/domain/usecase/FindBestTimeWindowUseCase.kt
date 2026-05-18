@@ -19,9 +19,11 @@ class FindBestTimeWindowUseCase {
         startHour: Int = 6,
         endHourExclusive: Int = 22
     ): Pair<TimeWindow, RideScoreResult>? {
+        val normalizedStartHour = startHour.coerceIn(0, 22)
+        val normalizedEndHourExclusive = endHourExclusive.coerceIn(normalizedStartHour + 1, 23)
 
         val hours = day.hourly
-            .filter { it.time.hour in startHour until endHourExclusive }
+            .filter { it.time.hour in normalizedStartHour until normalizedEndHourExclusive }
 
         if (hours.size < windowHours) return null
 

@@ -34,6 +34,8 @@ class SettingsRepositoryImpl(
         private val KEY_TEMPERATURE_UNIT = stringPreferencesKey("temperature_unit")
         private val KEY_TIME_WINDOW_HOURS = intPreferencesKey("time_window_hours")
         private val KEY_RIDE_MODE = stringPreferencesKey("ride_mode")
+        private val KEY_AVAILABLE_START_HOUR = intPreferencesKey("available_start_hour")
+        private val KEY_AVAILABLE_END_HOUR = intPreferencesKey("available_end_hour")
     }
 
     override fun observeSettings(): Flow<AppSettings> {
@@ -51,7 +53,11 @@ class SettingsRepositoryImpl(
                     RideMode.WALK.name -> RideMode.WALK
                     RideMode.RUN.name -> RideMode.RUN
                     else -> RideMode.BIKE
-                }
+                },
+                availableStartHour = prefs[KEY_AVAILABLE_START_HOUR]
+                    ?: AppSettings.DEFAULT_AVAILABLE_START_HOUR,
+                availableEndHour = prefs[KEY_AVAILABLE_END_HOUR]
+                    ?: AppSettings.DEFAULT_AVAILABLE_END_HOUR
             )
         }
     }
@@ -71,6 +77,18 @@ class SettingsRepositoryImpl(
     override suspend fun updateRideMode(mode: String) {
         context.dataStore.edit { prefs ->
             prefs[KEY_RIDE_MODE] = mode
+        }
+    }
+
+    override suspend fun updateAvailableStartHour(hour: Int) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_AVAILABLE_START_HOUR] = hour
+        }
+    }
+
+    override suspend fun updateAvailableEndHour(hour: Int) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_AVAILABLE_END_HOUR] = hour
         }
     }
 }

@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.fahimeh.rideready.domain.model.RideMode
 import com.fahimeh.rideready.domain.model.TemperatureUnit
 import com.fahimeh.rideready.domain.usecase.ObserveSettingsUseCase
+import com.fahimeh.rideready.domain.usecase.UpdateAvailableEndHourUseCase
+import com.fahimeh.rideready.domain.usecase.UpdateAvailableStartHourUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateRideModeUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateTemperatureUnitUseCase
 import com.fahimeh.rideready.domain.usecase.UpdateTimeWindowHoursUseCase
@@ -23,7 +25,9 @@ class SettingsViewModel(
     private val observeSettingsUseCase: ObserveSettingsUseCase,
     private val updateTemperatureUnitUseCase: UpdateTemperatureUnitUseCase,
     private val updateTimeWindowHoursUseCase: UpdateTimeWindowHoursUseCase,
-    private val updateRideModeUseCase: UpdateRideModeUseCase
+    private val updateRideModeUseCase: UpdateRideModeUseCase,
+    private val updateAvailableStartHourUseCase: UpdateAvailableStartHourUseCase,
+    private val updateAvailableEndHourUseCase: UpdateAvailableEndHourUseCase
 ) : ViewModel() {
 
     // Interner Zustand
@@ -65,6 +69,18 @@ class SettingsViewModel(
     fun updateRideMode(mode: RideMode) {
         viewModelScope.launch {
             updateRideModeUseCase(mode.name)
+        }
+    }
+
+    fun updateAvailableStartHour(hour: Int) {
+        viewModelScope.launch {
+            updateAvailableStartHourUseCase(hour)
+        }
+    }
+
+    fun updateAvailableEndHour(hour: Int) {
+        viewModelScope.launch {
+            updateAvailableEndHourUseCase(hour)
         }
     }
 }
