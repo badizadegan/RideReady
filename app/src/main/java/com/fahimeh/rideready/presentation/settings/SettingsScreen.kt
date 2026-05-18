@@ -3,6 +3,7 @@ package com.fahimeh.rideready.presentation.settings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -150,17 +151,7 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             DaySelectionRow(
-                days = WEEKDAY_ROWS.first(),
-                selectedDays = state.settings.preferredDays,
-                onToggle = { day ->
-                    viewModel.updatePreferredDays(state.settings.preferredDays.toggle(day))
-                }
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            DaySelectionRow(
-                days = WEEKDAY_ROWS.last(),
+                days = WEEKDAYS,
                 selectedDays = state.settings.preferredDays,
                 onToggle = { day ->
                     viewModel.updatePreferredDays(state.settings.preferredDays.toggle(day))
@@ -228,9 +219,10 @@ private fun DaySelectionRow(
     selectedDays: Set<DayOfWeek>,
     onToggle: (DayOfWeek) -> Unit
 ) {
-    Row(
+    FlowRow(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         days.forEach { day ->
             FilterChip(
@@ -485,10 +477,7 @@ private fun fahrenheitToCelsius(valueF: Int): Int = ((valueF - 32) * 5.0 / 9.0).
 private const val MIN_PREFERRED_TEMP_C = -20
 private const val MAX_PREFERRED_TEMP_C = 45
 
-private val WEEKDAY_ROWS = listOf(
-    listOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY),
-    listOf(DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
-)
+private val WEEKDAYS = DayOfWeek.entries
 
 private fun DayOfWeek.shortLabel(): String {
     return when (this) {
